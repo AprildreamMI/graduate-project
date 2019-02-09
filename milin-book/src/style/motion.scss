@@ -1,0 +1,38 @@
+@keyframes MoveRightIn {
+  0% {
+    opacity: 0;
+    transform-origin: 0 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform-origin: 0 0;
+    transform: translateX(0%);
+  }
+}
+
+@keyframes MoveRightOut {
+  0% {
+    transform-origin: 0 0;
+    transform: translateX(0%);
+    opacity: 1;
+  }
+  100% {
+    transform-origin: 0 0;
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.move-right {
+  &-in {
+    position: absolute;
+    right: 0;
+    animation: MoveRightIn 0.3s;
+  }
+  &-out {
+    position: absolute;
+    right: 0;
+    animation: MoveRightOut 0.3s;
+  }
+}

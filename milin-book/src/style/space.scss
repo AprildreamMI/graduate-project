@@ -1,0 +1,35 @@
+/**
+ * 为了开发方便，这里生成了一组常用的margin和padding类，具体尺寸有：5px、10px、15px、20px、25px。使用方法如下：
+ * margin-{size}类表示4个方向都有同样大小的外边距，如margin-10。
+ * padding-{size}类表示4个方向都有同样大小的内边距，如padding-15。
+ * margin-{side}-{size}类表示某个方向有设定大小的外边距，如margin-top-25。
+ * padding-{side}-{size}类表示某个方向有设定大小的内边距，如padding-right-5。
+ */
+
+ $maxSize       : 25;
+ $list          : top right bottom left;
+
+ @mixin generateSpace($space, $size, $side: false) {
+   $i: 5;
+   @while ($size >= $i) {
+     @if($side) {
+       .#{$space}-#{$side}-#{$i} {
+         #{$space}-#{$side}: $i + px;
+       }
+     }
+     @else {
+       .#{$space}-#{$i} {
+         #{$space}: $i + px;
+       }
+     }
+     $i: $i + 5;
+   }
+ }
+
+ @each $dir in $list {
+   @include generateSpace(margin, $maxSize, $dir);
+   @include generateSpace(padding, $maxSize, $dir);
+ }
+
+ @include generateSpace(margin, $maxSize);
+ @include generateSpace(padding, $maxSize);

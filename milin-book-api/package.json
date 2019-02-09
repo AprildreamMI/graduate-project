@@ -1,0 +1,21 @@
+{
+  "name": "milin-book-api",
+  "version": "0.1.0",
+  "description": "密林的书--赵思(magicwingzs@qq.com)的毕业设计作品(网上书城)后端",
+  "main": "bin/www",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "book"
+  ],
+  "author": "赵思",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "mysql": "^2.16.0"
+  }
+}

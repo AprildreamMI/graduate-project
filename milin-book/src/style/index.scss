@@ -1,0 +1,79 @@
+@import './reset.scss';
+@import './motion.scss';
+@import './space.scss';
+@import './flex.scss';
+@import './element-theme.scss';
+
+body {
+
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+// 左浮动 右浮动
+.pull-left {
+  float: left;
+}
+.pull-right {
+  float: right;
+}
+// 手形
+.cursor-pointer {
+  cursor: pointer;
+}
+
+// 清除浮动
+.clearfix {
+  &:after,
+  &:before {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+// 字体及样式和大小
+.text {
+  &-center {
+    text-align: center;
+  }
+  &-left {
+    text-align: left;
+  }
+  &-right {
+    text-align: right;
+  }
+  &-24-R {
+    font-size:24px;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+  }
+  &-20-M {
+    font-size:20px;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+  }
+  &-16-M {
+    font-size:16px;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+  }
+  &-14-M {
+    font-size:14px;
+    font-family:PingFangSC-Medium;
+    font-weight:500;
+  }
+  &-14-R {
+    font-size:14px;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+  }
+  &-12-R {
+    font-size:12px;
+    font-family:PingFangSC-Regular;
+    font-weight:400;
+  }
+}
