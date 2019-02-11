@@ -14,6 +14,11 @@ const routes = [
   {
     path: '/',
     component: () => import('../views/test/test-01.vue')
+  },
+  // 后台管理登陆页面
+  {
+    path: '/admin/login',
+    component: () => import('../views/admin/login')
   }
   /* // 登录页
   {

@@ -1,0 +1,20 @@
+{
+  "apps": [
+    {
+      "name": "milin-book",
+      "script": "bin/www",
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "instances": 6,
+      "min_uptime": "200s",
+      "max_restarts": 10,
+      "max_memory_restart": "1M",
+      "cron_restart": "1 0 * * *",
+      "watch": true,
+      "merge_logs": true,
+      "exec_interpreter": "node",
+      "exec_mode": "fork",
+      "autorestart": false,
+      "vizion": false
+    }
+  ]
+}

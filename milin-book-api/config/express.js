@@ -1,20 +1,18 @@
 // 初始化Express 框架
-
 var express = require('express');
 var bodyParser = require('body-parser');
-var cors = require('cors');
+var path = require('path');
 
 module.exports  = function(){
   console.log('init expesss...');
   var app = express();
 
   
-  // 配置中间件
+  // 配置中间件 但还是通过body 来获取
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
   // app.use(express.static("./public"));
 
-  // app.use(cors());
   //2.0 将所有api的请求响应content-type设置为application/json
   app.all('/api/*', (req, res, next) => {
     //设置允许跨域响应报文头
@@ -29,12 +27,16 @@ module.exports  = function(){
     res.header("X-Powered-By",' 3.2.1')
     res.setHeader('Content-Type','application/json;charset=utf-8')
     if(req.method == "OPTIONS") {
-      res.send(200);
+      res.sendStatus(200);
     }
     else {
       next()
     }
   });
+
+  // 开放资源 目录
+  app.use('/public', express.static('public'));
+  app.use('/node_modules', express.static('node_modules'));
 
   require('../app/routes/milinbook.server.routes')(app);
 
