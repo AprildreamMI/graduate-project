@@ -3,15 +3,15 @@
 
  Source Server         : localhost_3306
  Source Server Type    : MySQL
- Source Server Version : 80014
+ Source Server Version : 80011
  Source Host           : localhost:3306
  Source Schema         : milinbook
 
  Target Server Type    : MySQL
- Target Server Version : 80014
+ Target Server Version : 80011
  File Encoding         : 65001
 
- Date: 09/02/2019 16:48:31
+ Date: 12/02/2019 23:58:25
 */
 
 SET NAMES utf8mb4;
@@ -47,8 +47,8 @@ CREATE TABLE `tb_bookinfo`  (
   `BookPackstyle` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '封装方式',
   PRIMARY KEY (`BookId`) USING BTREE,
   INDEX `BookTypeId_F`(`BookTypeId`) USING BTREE,
-  CONSTRAINT `BookTypeId_F` FOREIGN KEY (`BookTypeId`) REFERENCES `tb_booktypeinfo` (`BookTypeId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  CONSTRAINT `BookTypeId_F` FOREIGN KEY (`BookTypeId`) REFERENCES `tb_booktypeinfo` (`booktypeid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_booktypeinfo
@@ -58,7 +58,7 @@ CREATE TABLE `tb_booktypeinfo`  (
   `BookTypeId` int(11) NOT NULL AUTO_INCREMENT COMMENT '图书类型编号 自增字段',
   `BookTypeName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '	\r\n类别名称',
   PRIMARY KEY (`BookTypeId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_comment
@@ -74,9 +74,9 @@ CREATE TABLE `tb_comment`  (
   PRIMARY KEY (`CommentId`) USING BTREE,
   INDEX `BookId_C_F`(`BookId`) USING BTREE,
   INDEX `CustomerId_C_F`(`CustomerId`) USING BTREE,
-  CONSTRAINT `BookId_C_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `CustomerId_C_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  CONSTRAINT `BookId_C_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`bookid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `CustomerId_C_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`customerid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_customerinfo
@@ -99,7 +99,7 @@ CREATE TABLE `tb_customerinfo`  (
   `addressId` int(11) NOT NULL COMMENT '默认的收货地址',
   PRIMARY KEY (`CustomerId`, `CustomerName`, `CustomerEmail`) USING BTREE,
   INDEX `CustomerId`(`CustomerId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_manager
@@ -107,11 +107,18 @@ CREATE TABLE `tb_customerinfo`  (
 DROP TABLE IF EXISTS `tb_manager`;
 CREATE TABLE `tb_manager`  (
   `AdminId` int(11) NOT NULL AUTO_INCREMENT COMMENT '管理员编号',
-  `AdminName` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '管理员名称',
+  `AdminName` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '管理员昵称',
+  `AdminAccount` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '管理员账号 邮箱',
   `AdminPwd` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码',
-  `AdminFlag` enum('1','2','3') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '权限标志:\r\n1、可以增删查改图书信息\r\n2、包含权限1的功能，并且可以处理订单\r\n3、最高 root ',
-  PRIMARY KEY (`AdminId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  `AdminFlag` enum('1','2','3') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '权限标志:\r\n1、可以增删查改图书信息\r\n2、包含权限1的功能，并且可以处理订单\r\n3、最高 root ，可以管理其他的管理员账号',
+  `AdminStatus` enum('1','0') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '1' COMMENT '管理员账号状态\r\n1、正常\r\n2、禁用',
+  PRIMARY KEY (`AdminId`, `AdminAccount`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tb_manager
+-- ----------------------------
+INSERT INTO `tb_manager` VALUES (1, '赵思', '1159902844@qq.com', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '3', '1');
 
 -- ----------------------------
 -- Table structure for tb_order
@@ -138,9 +145,9 @@ CREATE TABLE `tb_order`  (
   PRIMARY KEY (`id`, `OrderId`) USING BTREE,
   INDEX `CustomerId_O_F`(`CustomerId`) USING BTREE,
   INDEX `BookId_O_F`(`BookId`) USING BTREE,
-  CONSTRAINT `BookId_O_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `CustomerId_O_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  CONSTRAINT `BookId_O_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`bookid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `CustomerId_O_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`customerid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_parameter
@@ -174,9 +181,9 @@ CREATE TABLE `tb_shopbook`  (
   PRIMARY KEY (`shopCarId`) USING BTREE,
   INDEX `CustomerId_F`(`CustomerId`) USING BTREE,
   INDEX `BookId_F`(`BookId`) USING BTREE,
-  CONSTRAINT `BookId_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `CustomerId_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  CONSTRAINT `BookId_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`bookid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `CustomerId_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`customerid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_useraddress
@@ -188,8 +195,8 @@ CREATE TABLE `tb_useraddress`  (
   `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`addressId`) USING BTREE,
   INDEX `CustomerId_A_F`(`CustomerId`) USING BTREE,
-  CONSTRAINT `CustomerId_A_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  CONSTRAINT `CustomerId_A_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`customerid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for test
