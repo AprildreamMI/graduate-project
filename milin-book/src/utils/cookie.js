@@ -1,11 +1,13 @@
 import Cookies from 'js-cookie'
 
+// 开发
 const isDev = process.env.NODE_ENV === 'development'
 
+// 生产
 const isProd = process.env.NODE_ENV === 'production'
 
 const config = {
-  domain: isDev ? 'localhost' : isProd ? 'yoyohr.com' : '192.168.1.124'
+  domain: isDev ? 'localhost' : isProd ? 'localhost' : 'localhost'
 }
 
 export default {

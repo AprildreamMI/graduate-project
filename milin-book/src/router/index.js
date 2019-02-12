@@ -19,6 +19,18 @@ const routes = [
   {
     path: '/admin/login',
     component: () => import('../views/admin/login')
+  },
+  // 后台主页
+  {
+    path: '/admin',
+    component: () => import('../views/admin'),
+    redirect: '/admin/stats',
+    children: [
+      {
+        path: 'stats',
+        component: () => import('../views/admin/stats')
+      }
+    ]
   }
   /* // 登录页
   {

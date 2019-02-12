@@ -27,8 +27,6 @@ module.exports = {
   /* 
     后台管理  start
   */
- 
-
   adminLogin (req, res, next) {
     console.log('body', req.body)
     let sql = `SELECT * FROM tb_manager where AdminAccount = "${req.body.AdminAccount}"`
