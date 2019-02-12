@@ -37,7 +37,7 @@
 <script>
 import SHA256 from 'js-sha256'
 import * as api from '../../../api'
-// import cookie from '../../../utils/cookie.js'
+import cookie from '../../../utils/cookie.js'
 
 export default {
   data () {
@@ -79,6 +79,10 @@ export default {
             if (res.data.code === 0) {
               this.$message.success(res.data.message)
               loading.close()
+
+              // 把me存储在cookie中 admin_me
+              cookie.set('admin_me', res.data.data.me)
+              this.$router.push('/admin')
               console.log(res.data)
             } else {
               this.$message.error(res.data.message)

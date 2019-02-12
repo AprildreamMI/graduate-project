@@ -25,6 +25,9 @@ const routes = [
     path: '/admin',
     component: () => import('../views/admin'),
     redirect: '/admin/stats',
+    meta: {
+      requireAuthAdmin: true
+    },
     children: [
       {
         path: 'stats',
@@ -79,11 +82,18 @@ const router = new Router({
 
 router.beforeEach(async (to, from, next) => {
   bar.start()
-  if (to.matched.some(res => res.meta.requireAuth)) { // 判断是否需要登陆
-    if (cookie.get('is_login')) { // 判断是否已登陆
+  // 判断是否需要普通用户登陆
+  if (to.matched.some(res => res.meta.requireAuthUser)) {
+    if (cookie.get('user_me')) { // 判断是否已登陆
       next()
     } else {
       next('/login')
+    }
+  } else if (to.matched.some(res => res.meta.requireAuthAdmin)) {
+    if (cookie.get('admin_me')) { // 判断是否已登陆
+      next()
+    } else {
+      next('admin/login')
     }
   }
   next()

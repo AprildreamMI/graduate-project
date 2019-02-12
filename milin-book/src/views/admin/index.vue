@@ -4,7 +4,7 @@
     <left-sidebar>
       <div class="logo">
         <img src="/static/img/login_blue.png" alt="">
-        <h3 class="text-24-R">管理员：赵思</h3>
+        <h3 class="text-24-R">管理员：{{ admin_me.AdminName }}</h3>
         <div></div>
       </div>
       <el-menu
@@ -22,7 +22,6 @@
             <i class="iconfont icon-tuandui alibaba-icont"></i>
             <span>账号管理</span>
           </template>
-          <el-menu-item-group>
             <el-menu-item index="1-1">
               <i class="iconfont icon-guanliyuan alibaba-icont"></i>
               <span slot="title">管理员账号</span>
@@ -31,7 +30,6 @@
               <i class="iconfont icon-yonghu alibaba-icont"></i>
               <span slot="title">用户账号</span>
             </el-menu-item>
-          </el-menu-item-group>
         </el-submenu>
         <el-menu-item index="3">
           <i class="iconfont icon-shu alibaba-icont"></i>
@@ -52,8 +50,18 @@
   </layout>
 </template>
 <script>
+import cookie from '../../utils/cookie.js'
 export default {
+  data () {
+    return {
 
+    }
+  },
+  computed: {
+    admin_me () {
+      return JSON.parse(cookie.get('admin_me'))
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
