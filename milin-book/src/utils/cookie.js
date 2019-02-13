@@ -7,6 +7,7 @@ const isDev = process.env.NODE_ENV === 'development'
 const isProd = process.env.NODE_ENV === 'production'
 
 const config = {
+  // domain: isDev ? 'http://localhost:3000/' : isProd ? 'http://localhost:3000/' : 'http://localhost:3000/'
   domain: isDev ? 'localhost' : isProd ? 'localhost' : 'localhost'
 }
 

@@ -5,7 +5,7 @@
 */
 
 .el-button {
-  width: 100%;
+  // width: 100%;
 }
 
 .alibaba-icont {
@@ -14,4 +14,17 @@
   text-align: center;
   font-size: 18px;
   vertical-align: middle;
+}
+
+// 自定义的dialog类名 需通过 custom-class="my-el-dialog" 传入 dialog
+.my-el-dialog {
+  .el-dialog__header {
+    display: none;
+  }
+  .el-dialog__body {
+    padding: 0 20px 0 20px;
+  }
+}
+.el-popover {
+  border-radius: 0;
 }

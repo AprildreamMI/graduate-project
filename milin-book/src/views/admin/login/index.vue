@@ -77,6 +77,11 @@ export default {
             AdminPwd: SHA256(this.userForm.password)
           }).then(res => {
             if (res.data.code === 0) {
+              if (res.data.data.me.AdminStatus === '2') {
+                this.$message.success('登录失败，此账号已被禁用')
+                loading.close()
+                return
+              }
               this.$message.success(res.data.message)
               loading.close()
 

@@ -1,9 +1,28 @@
 // 数据操作模块
-
 var db = require('../models/milinbook.server.model')
+var formidable = require('formidable');//上传功能的插件
 var urlPase = require('url');
 
+// 检测是不是最高管理员
+let isRoot =  (req, res) => {
+  if (!req.cookies.admin_me) {
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write('<head><meta charset="utf-8"/></head>');
+    res.end('<h1>错误！！！！没有权限获取账号列表</h1>');
+    return res.send()
+  }
+  let admin_me = JSON.parse(req.cookies.admin_me)
+
+  if (Number(admin_me.AdminFlag) < 3) {
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write('<head><meta charset="utf-8"/></head>');
+    res.end('<h1>错误！！！！没有权限获取账号列表</h1>');
+    return res.send()
+  }
+}
+
 module.exports = {
+
     // 测试数据
   getAll: function(req, res, next){
     var  sql = 'SELECT * FROM test';
@@ -65,5 +84,44 @@ module.exports = {
             }
         }
     })
+  },
+
+  // 获取所有管理员账号
+  adminGetAccountAll (req, res, next) {
+    console.log('进入了')
+    isRoot(req, res)
+    let sql = `SELECT * FROM tb_manager`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:null,
+          code:-1,
+          message:"获取账号列表失败"
+        });
+      } else {
+        return res.status(200).json({
+          data: {
+            accountList: result
+          },
+          code: 0,
+          message: "获取账号列表成功"
+        });
+      }
+    });
+  },
+
+  // 添加管理员账号时 上传头像
+  adminUploadAvatar (req, res, next) {
+    // 文件上传路径
+    var uploadDir='./public/upload/img/adminAvatar';
+    var form=new formidable.IncomingForm();
+    //文件的编码格式
+    form.encoding = 'utf-8';
+    //文件的上传路径
+    form.uploadDir = uploadDir;
+    //文件的后缀名
+    form.extensions = true;
+    //文件的大小限制
+    form.maxFieldsSize = 2 * 1024 * 1024;
   }
-};
+}

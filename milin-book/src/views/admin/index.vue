@@ -3,30 +3,29 @@
     <!-- 左侧边栏 -->
     <left-sidebar>
       <div class="logo">
-        <img src="/static/img/login_blue.png" alt="">
+        <img :src="'http://localhost:3000/'+admin_me.AdminAvatar" alt="">
         <h3 class="text-24-R">管理员：{{ admin_me.AdminName }}</h3>
         <div></div>
       </div>
       <el-menu
-        default-active="/admin/stats"
+        :default-active="active"
         class="el-menu-vertical-demo"
-        @open="handleOpen"
-        @close="handleClose"
         :router="true">
         <el-menu-item index="/admin/stats">
           <i class="iconfont icon-tongji2 alibaba-icont"></i>
           <span slot="title">统计</span>
         </el-menu-item>
-        <el-submenu index="2">
+        <!-- 权限小于3的，不能进行账号的管理 -->
+        <el-submenu index="/admin/account" :disabled="Number(admin_me.AdminFlag) < 3">
           <template slot="title">
             <i class="iconfont icon-tuandui alibaba-icont"></i>
             <span>账号管理</span>
           </template>
-            <el-menu-item index="1-1">
+            <el-menu-item index="/admin/account/adminAccount">
               <i class="iconfont icon-guanliyuan alibaba-icont"></i>
               <span slot="title">管理员账号</span>
             </el-menu-item>
-            <el-menu-item index="1-2">
+            <el-menu-item index="/admin/account/userAccount">
               <i class="iconfont icon-yonghu alibaba-icont"></i>
               <span slot="title">用户账号</span>
             </el-menu-item>
@@ -35,7 +34,8 @@
           <i class="iconfont icon-shu alibaba-icont"></i>
           <span slot="title">书籍管理</span>
         </el-menu-item>
-        <el-menu-item index="4">
+        <!-- 权限小于2的不能进行订单的管理 -->
+        <el-menu-item index="4" :disabled="Number(admin_me.AdminFlag) < 2">
           <i class="iconfont icon-dingdan alibaba-icont"></i>
           <span slot="title">订单管理</span>
         </el-menu-item>
@@ -54,12 +54,14 @@ import cookie from '../../utils/cookie.js'
 export default {
   data () {
     return {
-
     }
   },
   computed: {
     admin_me () {
       return JSON.parse(cookie.get('admin_me'))
+    },
+    active () {
+      return this.$route.path
     }
   }
 }

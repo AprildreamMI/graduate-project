@@ -18,3 +18,5 @@ export const getAll = () => get(`/test`)
   后台管理 start
 */
 export const adminLogin = (data) => post('/admin/login', data)
+
+export const adminGetAccountAll = () => get('/admin/getAccountAll')

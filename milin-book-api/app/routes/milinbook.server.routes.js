@@ -14,4 +14,11 @@ module.exports = function(app){
   // 登陆
   app.route('/api/admin/login')
     .post(MilinBookController.adminLogin)
+  
+  // 获取所用的管理员账户
+  app.route('/api/admin/getAccountAll')
+    .get(MilinBookController.adminGetAccountAll)
+
+  app.route('/api/admin/upload')
+    .post(MilinBookController.adminUploadAvatar)
 };

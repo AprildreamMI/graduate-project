@@ -5,6 +5,8 @@
 export const baseURL = 'http://localhost:3000/api'
 // 30秒中断请求
 axios.defaults.timeout = 30000
+// 请求携带 cookies
+axios.defaults.withCredentials = true
 
 // 拦截发送请求
 axios.interceptors.request.use(

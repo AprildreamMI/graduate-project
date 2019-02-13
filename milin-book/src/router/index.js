@@ -32,6 +32,17 @@ const routes = [
       {
         path: 'stats',
         component: () => import('../views/admin/stats')
+      },
+      {
+        path: 'account/adminAccount',
+        component: () => import('../views/admin/account/adminAccount'),
+        meta: {
+          requireAuthAdminAccount: true
+        }
+      },
+      {
+        path: 'account/userAccount',
+        component: () => import('../views/admin/account/userAccount')
       }
     ]
   }
@@ -89,11 +100,12 @@ router.beforeEach(async (to, from, next) => {
     } else {
       next('/login')
     }
+    // 判断需要管理员账号登录
   } else if (to.matched.some(res => res.meta.requireAuthAdmin)) {
     if (cookie.get('admin_me')) { // 判断是否已登陆
       next()
     } else {
-      next('admin/login')
+      next('/admin/login')
     }
   }
   next()
