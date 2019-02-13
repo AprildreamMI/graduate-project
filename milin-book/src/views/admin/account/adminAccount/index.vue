@@ -24,12 +24,12 @@
           </div>
         </div>
       </div>
-      <el-dialog custom-class="my-el-dialog" :visible.sync="openAddAdminAccountDialog" width="380px" top="30px">
+      <el-dialog custom-class="my-el-dialog" :visible.sync="openAddAdminAccountDialog" width="420px" top="120px">
         <div class="handle-title text-16-M">
           添加账号
         </div>
         <div class="add-account-content add-account-from">
-          <el-form :model="newAdminAccountFrom" :rules="newAdminAccountFromRules" label-position="left" ref="addAccount" label-width="100px" hide-required-asterisk>
+          <el-form :model="newAdminAccountFrom" :rules="newAdminAccountFromRules" label-position="left" ref="addAccountFrom" label-width="100px" hide-required-asterisk>
             <div class="from-item">
               <el-form-item label="管理员昵称" prop="AdminName">
                 <div class="item-input">
@@ -71,40 +71,27 @@
                   <el-upload
                     ref="uploadsAvatar"
                     class="avatar-uploader"
-                    :data="newAdminAccountFrom.AdminAccount"
-                    :headers="headers"
+                    :data="{
+                      name: newAdminAccountFrom.AdminAccount
+                    }"
                     action="http://localhost:3000/api/admin/upload"
-                    :auto-upload="true"
                     :show-file-list="false"
                     :on-success="handleAvatarSuccess"
                     :on-error="uploadsError"
+                    :on-change="uploadActive"
                     :before-upload="beforeAvatarUpload">
                     <!-- <el-button size="small" type="primary">点击上传</el-button> -->
-                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                    <img v-if="newAdminAccountFrom.AdminAvatar" :src="newAdminAccountFrom.AdminAvatar" class="avatar">
                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                   </el-upload>
                 </div>
               </el-form-item>
             </div>
-            <!-- <div class="from-item">
-              <el-form-item label="预设看板">
-                <div class="item-input">
-                  <el-select v-model="panel.size_id" placeholder="大屏" @change="selecrChange">
-                    <el-option
-                      v-for="item in sizeSelect"
-                      :key="item.id"
-                      :label="item.label"
-                      :value="item.id">
-                    </el-option>
-                  </el-select>
-                </div>
-              </el-form-item>
-            </div> -->
           </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          <el-button @click="openAddAdminAccountDialog = false">取 消</el-button>
+          <el-button type="primary" @click="addAdminAccount('addAccountFrom')">确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -136,6 +123,7 @@ export default {
       adminAccountList: [],
       // 打开添加管理员账号的dialog
       openAddAdminAccountDialog: false,
+      // 新增的管理员表单
       newAdminAccountFrom: {
         AdminName: '',
         AdminAccount: '',
@@ -186,12 +174,30 @@ export default {
       })
     },
     // 保存新添加的管理员账号
-    addAdminAccount () {
-
+    addAdminAccount (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!')
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
     // 上传成功
     handleAvatarSuccess (res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
+      console.log('上传图片的返回', res)
+      if (res.code === 0) {
+        this.$message.success('上传头像成功')
+        this.newAdminAccountFrom.AdminAvatar = `http://localhost:3000/${res.data.newAvatarPath}`
+      } else {
+        this.$message.error('上传头像失败')
+      }
+    },
+    // 文件上传时
+    uploadActive (file, fileList) {
+      console.log(file)
+      console.log(fileList)
     },
     // 上传之前
     beforeAvatarUpload (file) {
@@ -208,7 +214,7 @@ export default {
     },
     // 上传失败
     uploadsError (response, file, fileList) {
-
+      this.$message.error('上传头像失败, 请重试')
     },
     // 手动上传图片
     submitAvatar () {

@@ -6,14 +6,14 @@
           <p class="from-title text-24-R">后台管理</p>
           <div class="login-from">
             <el-form :model="userForm" :rules="userRules" ref="userForm" label-position="top" hide-required-asterisk>
-              <div class="from-item text-12-R">
+              <div class="from-item text-14-M">
                 <el-form-item label="账号" prop="username">
                   <div class="from-item-input">
                     <el-input type="text" v-model="userForm.username" autocomplete="off"></el-input>
                   </div>
                 </el-form-item>
               </div>
-              <div class="from-item text-12-R">
+              <div class="from-item text-14-M">
                 <el-form-item label="密码" prop="password">
                   <div class="from-item-input">
                     <el-input type="password" v-model="userForm.password" autocomplete="off"></el-input>
@@ -22,9 +22,10 @@
               </div>
             </el-form>
           </div>
-          <div class="login-btn">
+          <div class="login-btn text-14-M" @click="submitLogin('userForm')">
             <!-- <pc-btn @clickBtn="submitLogin('userForm')" :type="'primary'">登录</pc-btn> -->
-            <el-button type="primary"  @click="submitLogin('userForm')">登陆</el-button>
+            <!-- <el-button type="primary"  >登陆</el-button> -->
+            登 陆
           </div>
         </div>
         <div class="right-bottom-bg">
@@ -177,9 +178,19 @@ export default {
             }
           }
           .login-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             width:330px;
             height:40px;
             margin-top: 20px;
+            background-color: $primary-color;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            &:hover {
+              background-color: $primary-sub-color;
+            }
           }
         }
         .right-bottom-bg {

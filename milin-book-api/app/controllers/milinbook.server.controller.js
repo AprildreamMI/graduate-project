@@ -1,6 +1,7 @@
 // 数据操作模块
 var db = require('../models/milinbook.server.model')
-var formidable = require('formidable');//上传功能的插件
+var formidable = require('formidable'); //上传功能的插件
+var fs = require('fs');
 var urlPase = require('url');
 
 // 检测是不是最高管理员
@@ -47,9 +48,7 @@ module.exports = {
     后台管理  start
   */
   adminLogin (req, res, next) {
-    console.log('body', req.body)
     let sql = `SELECT * FROM tb_manager where AdminAccount = "${req.body.AdminAccount}"`
-    console.log('sql', sql)
     db.query(sql, (err, result) => {
         if (err) {
             return res.status(200).json({
@@ -88,7 +87,6 @@ module.exports = {
 
   // 获取所有管理员账号
   adminGetAccountAll (req, res, next) {
-    console.log('进入了')
     isRoot(req, res)
     let sql = `SELECT * FROM tb_manager`
     db.query(sql, (err, result) => {
@@ -113,15 +111,49 @@ module.exports = {
   // 添加管理员账号时 上传头像
   adminUploadAvatar (req, res, next) {
     // 文件上传路径
-    var uploadDir='./public/upload/img/adminAvatar';
-    var form=new formidable.IncomingForm();
+    var uploadDir='public/upload/img/adminAvatar/';
+    var form = new formidable.IncomingForm();
+    // 新路径
+    let newAvatarPath = ''
+    // 新名字 要返回给客户端
+    let newName = ''
     //文件的编码格式
     form.encoding = 'utf-8';
     //文件的上传路径
     form.uploadDir = uploadDir;
     //文件的后缀名
-    form.extensions = true;
+    form.keepExtensions  = true;
     //文件的大小限制
     form.maxFieldsSize = 2 * 1024 * 1024;
+    console.log('req', req)
+
+    form.parse(req, function (err, fields, files) {
+      if (err) {
+        return res.status(200).json({
+          data:null,
+          code:-1,
+          message:"上传头像失败"
+        });
+      }
+
+      let type = files.file.type === 'image/jpeg'? '.jpg' : '.png'
+      let randomNumber = Math.floor(Math.random() * 100)
+      newAvatarPath = form.uploadDir  + files.file.name
+      newName = fields.name + '-' + randomNumber + type
+
+      //为上传的文件重命名：其中files.file.path可以获取文件的上传路径
+      fs.renameSync(files.file.path, newAvatarPath)
+    })
+
+    //文件上传完成后执行
+    form.on("end", function() {
+      return res.status(200).json({
+        data: {
+          newAvatarPath: newAvatarPath
+        },
+        code: 0,
+        message: "上传头像成功"
+      });
+    })
   }
 }
