@@ -3,15 +3,15 @@
 
  Source Server         : localhost_3306
  Source Server Type    : MySQL
- Source Server Version : 80014
+ Source Server Version : 80011
  Source Host           : localhost:3306
  Source Schema         : milinbook
 
  Target Server Type    : MySQL
- Target Server Version : 80014
+ Target Server Version : 80011
  File Encoding         : 65001
 
- Date: 14/02/2019 18:30:00
+ Date: 15/02/2019 00:29:50
 */
 
 SET NAMES utf8mb4;
@@ -74,7 +74,7 @@ CREATE TABLE `tb_comment`  (
   PRIMARY KEY (`CommentId`) USING BTREE,
   INDEX `BookId_C_F`(`BookId`) USING BTREE,
   INDEX `CustomerId_C_F`(`CustomerId`) USING BTREE,
-  CONSTRAINT `BookId_C_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `BookId_C_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`bookid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `CustomerId_C_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`customerid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -116,17 +116,18 @@ CREATE TABLE `tb_manager`  (
   PRIMARY KEY (`AdminId`) USING BTREE,
   UNIQUE INDEX `UN_Name`(`AdminName`) USING BTREE COMMENT '姓名唯一',
   UNIQUE INDEX `UN_Account`(`AdminAccount`) USING BTREE COMMENT '账号唯一'
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_manager
 -- ----------------------------
-INSERT INTO `tb_manager` VALUES (1, '赵思', '1159902844@qq.com', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '3', '1', 'public/upload/img/adminAvatar/default_admin_avatar.png');
-INSERT INTO `tb_manager` VALUES (17, '刘盼', 'liupan@qq.com', 'asdzxc456', '2', '1', 'public/upload/img/adminAvatar/633249.jpg');
-INSERT INTO `tb_manager` VALUES (18, '汤亮亮', 'tangliangliang@qq.com', 'asdzxc456', '1', '1', 'public/upload/img/adminAvatar/796108.jpg');
-INSERT INTO `tb_manager` VALUES (19, '王新翔', 'wangxinxiang@qq.com', 'asdzxc456', '1', '1', 'public/upload/img/adminAvatar/625916.jpg');
-INSERT INTO `tb_manager` VALUES (20, '王爽', 'wangshuang@qq.com', 'asdzxc456', '2', '1', 'public/upload/img/adminAvatar/信号台.jpg');
-INSERT INTO `tb_manager` VALUES (21, '刘胜胜', 'liusheng@qq.com', 'asdzxc456', '1', '1', 'public/upload/img/adminAvatar/796108.jpg');
+INSERT INTO `tb_manager` VALUES (1, '赵思思', '1159902844@qq.com', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '3', '1', 'public/upload/img/adminAvatar/default_admin_avatar.png');
+INSERT INTO `tb_manager` VALUES (17, '刘盼', 'liupan@qq.com', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '2', '1', 'public/upload/img/adminAvatar/633249.jpg');
+INSERT INTO `tb_manager` VALUES (18, '汤亮亮', 'tangliangliang@qq.com', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '1', '1', 'public/upload/img/adminAvatar/796108.jpg');
+INSERT INTO `tb_manager` VALUES (19, '王新翔', 'wangxinxiang@qq.com', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '1', '1', 'public/upload/img/adminAvatar/625916.jpg');
+INSERT INTO `tb_manager` VALUES (20, '王爽爽', 'wangshuang@qq.com', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '2', '1', 'public/upload/img/adminAvatar/信号台.jpg');
+INSERT INTO `tb_manager` VALUES (21, '刘胜胜', 'liusheng@qq.com', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '1', '1', 'public/upload/img/adminAvatar/796108.jpg');
+INSERT INTO `tb_manager` VALUES (23, '刘盼盼', 'liupanpan@qq.com', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '1', '1', 'public/upload/img/adminAvatar/default_admin_avatar.png');
 
 -- ----------------------------
 -- Table structure for tb_order
@@ -153,8 +154,8 @@ CREATE TABLE `tb_order`  (
   PRIMARY KEY (`id`, `OrderId`) USING BTREE,
   INDEX `CustomerId_O_F`(`CustomerId`) USING BTREE,
   INDEX `BookId_O_F`(`BookId`) USING BTREE,
-  CONSTRAINT `BookId_O_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `CustomerId_O_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `BookId_O_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`bookid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `CustomerId_O_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`customerid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -189,8 +190,8 @@ CREATE TABLE `tb_shopbook`  (
   PRIMARY KEY (`shopCarId`) USING BTREE,
   INDEX `CustomerId_F`(`CustomerId`) USING BTREE,
   INDEX `BookId_F`(`BookId`) USING BTREE,
-  CONSTRAINT `BookId_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `CustomerId_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `BookId_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`bookid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `CustomerId_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`customerid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -203,7 +204,7 @@ CREATE TABLE `tb_useraddress`  (
   `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`addressId`) USING BTREE,
   INDEX `CustomerId_A_F`(`CustomerId`) USING BTREE,
-  CONSTRAINT `CustomerId_A_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `CustomerId_A_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`customerid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------

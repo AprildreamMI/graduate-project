@@ -10,7 +10,7 @@
             <p class="text-24-R">{{ admin_me.AdminName }}</p>
             <el-tooltip class="item" effect="dark" content="Right Center 提示文字" placement="right">
               <div slot="content">
-                管理员等级<br/>
+                管理员等级所对应的权限<br/>
                 等级一：图书管理<br/>
                 等级二：图书管理，订单管理<br/>
                 等级三：图书管理，订单管理，账号管理<br/>
@@ -18,6 +18,11 @@
               <i class="iconfont" :class="admin_me.AdminFlag === '3'? 'icon-level3' : admin_me.AdminFlag === '2'? 'icon-level2' : 'icon-level1'"></i>
             </el-tooltip>
           </div>
+        </div>
+        <div class="handles">
+          <el-button @click="openUpdateAdminAccountDialog" type="primary" size="small">编 辑</el-button>
+          <el-button type="primary" size="small">改 密</el-button>
+          <el-button type="danger" size="small">注 销</el-button>
         </div>
         <div class="border-box"></div>
       </div>
@@ -59,15 +64,165 @@
         </el-menu-item>
       </el-menu>
     </left-sidebar>
+    <!-- 更新管理员账号的窗口 -->
+    <el-dialog custom-class="my-el-dialog" :visible.sync="isShowUpdateAdminAccountDialog" width="420px" top="120px">
+      <div class="handle-title text-16-M">
+        更新管理员账号
+      </div>
+      <div class="add-account-content add-account-from">
+        <el-form :model="updateAdminAccountFrom" :rules="newAdminAccountFromRules" label-position="left" ref="updateAccountFrom" label-width="100px" hide-required-asterisk>
+          <div class="from-item">
+            <el-form-item label="管理员昵称" prop="AdminName">
+              <div class="item-input">
+                <el-input v-model="updateAdminAccountFrom.AdminName" placeholder="请输入昵称或者姓名"></el-input>
+              </div>
+            </el-form-item>
+          </div>
+          <div class="from-item">
+            <el-form-item label="上传头像">
+              <div class="item-input img-bg">
+                <el-upload
+                  ref="uploadsAvatar"
+                  class="avatar-uploader"
+                  action="http://localhost:3000/api/admin/upload"
+                  :show-file-list="false"
+                  :on-success="updateHandleAvatarSuccess"
+                  :on-error="uploadsError"
+                  :on-change="uploadActive"
+                  :before-upload="beforeAvatarUpload">
+                  <img v-if="updateAdminAccountFrom.AdminAvatar" :src="`http://localhost:3000/${updateAdminAccountFrom.AdminAvatar}`" class="avatar">
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+              </div>
+            </el-form-item>
+          </div>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="closeUpdateAdminAccountDialog('updateAccountFrom')">取 消</el-button>
+        <el-button type="primary" @click="updateAdminAccount('updateAccountFrom')">确 定</el-button>
+      </span>
+    </el-dialog>
     <!-- 右主要内容区 -->
     <router-view></router-view>
   </layout>
 </template>
 <script>
+import * as api from '../../api'
 import cookie from '../../utils/cookie.js'
 export default {
   data () {
     return {
+      // 关闭或打开更新表单的Dialog
+      isShowUpdateAdminAccountDialog: false,
+      // 更新账号的表单
+      updateAdminAccountFrom: {
+        AdminId: '',
+        // 姓名
+        AdminName: '',
+        // 权限
+        AdminFlag: '',
+        // 头像
+        AdminAvatar: ''
+      },
+      // 表单验证
+      newAdminAccountFromRules: {
+        AdminName: [
+          { required: true, message: '请输入新增的管理员昵称', trigger: 'blur' }
+        ],
+        AdminAccount: [
+          { required: true, message: '请输入新增的管理员账号', trigger: 'blur' }
+        ]
+      }
+    }
+  },
+  methods: {
+    // 打开更新账号的窗口 赋值 当前对象
+    openUpdateAdminAccountDialog () {
+      this.updateAdminAccountFrom.AdminId = this.admin_me.AdminId
+      this.updateAdminAccountFrom.AdminName = this.admin_me.AdminName
+      this.updateAdminAccountFrom.AdminAvatar = this.admin_me.AdminAvatar
+      this.updateAdminAccountFrom.AdminFlag = this.admin_me.AdminFlag
+      this.isShowUpdateAdminAccountDialog = true
+    },
+    // 关闭更新账号的表单 并重置一些数据
+    closeUpdateAdminAccountDialog (formName) {
+      this.updateAdminAccountFrom = {
+        AdminId: '',
+        // 姓名
+        AdminName: '',
+        // 权限
+        AdminFlag: '',
+        // 头像
+        AdminAvatar: ''
+      }
+      this.isShowUpdateAdminAccountDialog = false
+      this.$refs[formName].resetFields()
+    },
+    // 保存新添加的管理员账号
+    updateAdminAccount (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let loading = this.$loading({
+            lock: true,
+            text: '正在更新管理员账号中',
+            background: 'rgba(0, 0, 0, 0.2)'
+          })
+          api.adminUpdateAdminAccount(this.updateAdminAccountFrom).then(res => {
+            if (res.data.code === 0) {
+              this.$message.success(res.data.message)
+              loading.close()
+              console.log('我进行更新了', res.data.data.newAccountInfo)
+              cookie.set('admin_me', res.data.data.newAccountInfo)
+              console.log('新的cookie', JSON.parse(cookie.get('admin_me')))
+
+              this.$router.go(0)
+              // 重置表单
+              this.closeUpdateAdminAccountDialog(formName)
+            } else {
+              this.$message.error(res.data.message)
+              loading.close()
+            }
+          }).catch((err) => {
+            console.log(err)
+            this.$message.error('更新管理员账号失败，请重试')
+            loading.close()
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    updateHandleAvatarSuccess (res, file) {
+      if (res.code === 0) {
+        this.$message.success('上传头像成功')
+        this.updateAdminAccountFrom.AdminAvatar = res.data.newAvatarPath
+      } else {
+        this.$message.error('上传头像失败')
+      }
+    },
+    // 文件上传时
+    uploadActive (file, fileList) {
+      console.log(file)
+      console.log(fileList)
+    },
+    // 上传之前
+    beforeAvatarUpload (file) {
+      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 或者 PNG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    },
+    // 上传失败
+    uploadsError (response, file, fileList) {
+      this.$message.error('上传头像失败, 请重试')
     }
   },
   computed: {
@@ -101,6 +256,7 @@ export default {
       align-items: flex-end;
       margin-bottom: 20px;
       height: 35px;
+      overflow: hidden;
       h2 {
         margin-right: 10px;
       }
@@ -129,6 +285,18 @@ export default {
         }
       }
     }
+    .handles {
+      display: flex;
+      height: 0px;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin-bottom: 10px;
+      transition: all 0.5s ease;
+      overflow: hidden;
+      button {
+        margin-bottom: 10px;
+      }
+    }
     .border-box {
       width: 90%;
       height: 1px;
@@ -137,8 +305,22 @@ export default {
       transform-origin: center;
     }
     &:hover {
+      .handles {
+        height: 90px;
+      }
       .border-box {
         border-color: $primary-sub-color;
+      }
+    }
+  }
+  .add-account-content {
+    width: 100%;
+    padding-top: 20px;
+    &.add-account-from {
+      .from-item {
+        .item-input {
+          width: 200px;
+        }
       }
     }
   }

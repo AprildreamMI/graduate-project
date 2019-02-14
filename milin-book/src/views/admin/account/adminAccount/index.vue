@@ -153,6 +153,7 @@
 </template>
 <script>
 import * as api from '../../../../api'
+import SHA256 from 'js-sha256'
 export default {
   data () {
     return {
@@ -243,6 +244,7 @@ export default {
             text: '正在添加管理员账号中',
             background: 'rgba(0, 0, 0, 0.2)'
           })
+          this.newAdminAccountFrom.AdminPwd = SHA256(this.newAdminAccountFrom.AdminPwd)
           api.adminAddAdminAccount(this.newAdminAccountFrom).then(res => {
             if (res.data.code === 0) {
               this.$message.success(res.data.message)
@@ -269,28 +271,36 @@ export default {
     },
     // 删除管理员账号
     deleteAdminAccount (adminId) {
-      let loading = this.$loading({
-        lock: true,
-        text: '正在删除管理员账号',
-        background: 'rgba(0, 0, 0, 0.2)'
-      })
-      api.deleteAdminAccount({
-        adminId: adminId
-      }).then(res => {
-        if (res.data.code === 0) {
-          this.$message.success(res.data.message)
-          loading.close()
-          console.log(res.data)
+      this.$confirm('此操作将永久删除该账号, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let loading = this.$loading({
+          lock: true,
+          text: '正在删除管理员账号',
+          background: 'rgba(0, 0, 0, 0.2)'
+        })
+        api.deleteAdminAccount({
+          adminId: adminId
+        }).then(res => {
+          if (res.data.code === 0) {
+            this.$message.success(res.data.message)
+            loading.close()
+            console.log(res.data)
 
-          // 刷新列表
-          this.getAllAcount()
-        } else {
-          this.$message.error(res.data.message)
+            // 刷新列表
+            this.getAllAcount()
+          } else {
+            this.$message.error(res.data.message)
+            loading.close()
+          }
+        }).catch(() => {
+          this.$message.error('删除管理员账号失败, 请重试')
           loading.close()
-        }
+        })
       }).catch(() => {
-        this.$message.error('删除管理员账号失败, 请重试')
-        loading.close()
+        this.$message.info('已取消删除')
       })
     },
     // 禁用账号 解禁账号

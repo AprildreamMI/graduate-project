@@ -242,30 +242,47 @@ module.exports = {
   // 更新账号信息
   adminUpdateAdminAccount (req, res, next) {
     isRoot(req, res)
-    console.log('body', req.body)
-    let sql = `UPDATE tb_manager SET AdminName = '${req.body.AdminName}', AdminFlag = '${req.body.AdminFlag}', AdminAvatar = '${req.body.AdminAvatar}' WHERE AdminId = ${req.body.AdminId}`
-    db.query(sql, (err, result) => {
+    async.waterfall([
+      callback => {
+        let sql = `UPDATE tb_manager SET AdminName = '${req.body.AdminName}', AdminFlag = '${req.body.AdminFlag}', AdminAvatar = '${req.body.AdminAvatar}' WHERE AdminId = ${req.body.AdminId}`
+        db.query(sql, (err, result) => {
+          if (result.affectedRows === 1) {
+            // 生成的ID会传给下一个任务
+            callback(err, req.body.AdminId); 
+          } else {
+            return res.status(200).json({
+              data:null,
+              code:1,
+              message: "更新账号信息失败"
+            })
+          }
+        })
+      },
+      (insertId, callback) => {
+        console.log('insertId', insertId)
+        let sql = `SELECT * FROM tb_manager where AdminId = "${insertId}"`
+        db.query(sql, (err, result) => {
+          callback(err, result)
+        })
+      }
+    ], function(err, results) {
       if (err) {
+        db.rollback(); // 发生错误事务回滚
         return res.status(200).json({
           data:err,
           code:-1,
           message: "更新账号信息失败"
         });
-      }
-      if (result.affectedRows === 1) {
-        return res.status(200).json({
-          data: null,
-          code: 0,
-          message: "更新账号信息成功"
-        });
       } else {
         return res.status(200).json({
-          data:null,
-          code:1,
-          message: "更新账号信息失败"
-        });
+          data: {
+            newAccountInfo: results[0]
+          },
+          code: 0,
+          message: "更新账号信息成功"
+        })
       }
-    });
+    })
   },
 
   // 添加管理员账号时 上传头像
