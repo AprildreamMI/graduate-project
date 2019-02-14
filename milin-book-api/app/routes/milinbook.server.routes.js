@@ -19,6 +19,24 @@ module.exports = function(app){
   app.route('/api/admin/getAccountAll')
     .get(MilinBookController.adminGetAccountAll)
 
+  // 添加管理员账号
+  app.route('/api/admin/addAdminAccount')
+    .post(MilinBookController.adminAddAdminAccount)
+
+  // 删除管理员账号
+  app.route('/api/admin/deleteAdminAccount')
+    .delete(MilinBookController.adminDeleteAdminAccount)
+  
+  // 更新账号状态
+  app.route('/api/admin/updateAdminAccountStatus')
+    .put(MilinBookController.adminUpdateAdminAccountStatus)
+
+  // 更新账号信息
+  app.route('/api/admin/updateAdminAccount')
+    .put(MilinBookController.adminUpdateAdminAccount)
+
+  // 上传文件
   app.route('/api/admin/upload')
     .post(MilinBookController.adminUploadAvatar)
+
 };

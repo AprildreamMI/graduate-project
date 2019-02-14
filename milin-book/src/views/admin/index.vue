@@ -4,8 +4,22 @@
     <left-sidebar>
       <div class="logo">
         <img :src="'http://localhost:3000/'+admin_me.AdminAvatar" alt="">
-        <h3 class="text-24-R">管理员：{{ admin_me.AdminName }}</h3>
-        <div></div>
+        <div class="logo-title-box">
+          <h2 class="text-24-R">管理员:</h2>
+          <div class="logo-title-box-name">
+            <p class="text-24-R">{{ admin_me.AdminName }}</p>
+            <el-tooltip class="item" effect="dark" content="Right Center 提示文字" placement="right">
+              <div slot="content">
+                管理员等级<br/>
+                等级一：图书管理<br/>
+                等级二：图书管理，订单管理<br/>
+                等级三：图书管理，订单管理，账号管理<br/>
+              </div>
+              <i class="iconfont" :class="admin_me.AdminFlag === '3'? 'icon-level3' : admin_me.AdminFlag === '2'? 'icon-level2' : 'icon-level1'"></i>
+            </el-tooltip>
+          </div>
+        </div>
+        <div class="border-box"></div>
       </div>
       <el-menu
         :default-active="active"
@@ -81,12 +95,51 @@ export default {
       width: 80%;
       margin-bottom: 10px;
     }
-    h3 {
+    &-title-box {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
       margin-bottom: 20px;
+      height: 35px;
+      h2 {
+        margin-right: 10px;
+      }
+      &-name {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        i {
+            font-size: 16px;
+            margin-left: 5px;
+          }
+        .icon-level3 {
+          &::before {
+            color: $danger-color
+          }
+        }
+        .icon-level2 {
+          &::before {
+            color: $primary-color
+          }
+        }
+        .icon-level1 {
+          &::before {
+            color: rgb(39, 39, 39)
+          }
+        }
+      }
     }
-    div {
+    .border-box {
       width: 90%;
-      border-bottom: 1px solid #ccc;
+      height: 1px;
+      border-bottom: 1px solid $bg-color-gray;
+      transition: all .3s ease;
+      transform-origin: center;
+    }
+    &:hover {
+      .border-box {
+        border-color: $primary-sub-color;
+      }
     }
   }
 </style>

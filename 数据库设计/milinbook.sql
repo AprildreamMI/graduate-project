@@ -11,7 +11,7 @@
  Target Server Version : 80014
  File Encoding         : 65001
 
- Date: 13/02/2019 20:38:23
+ Date: 14/02/2019 18:30:00
 */
 
 SET NAMES utf8mb4;
@@ -113,13 +113,20 @@ CREATE TABLE `tb_manager`  (
   `AdminFlag` enum('1','2','3') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '权限标志:\r\n1、可以增删查改图书信息\r\n2、包含权限1的功能，并且可以处理订单\r\n3、最高 root ，可以管理其他的管理员账号',
   `AdminStatus` enum('1','0') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '1' COMMENT '管理员账号状态\r\n1、正常\r\n2、禁用',
   `AdminAvatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'public/upload/img/adminAvatar/default_admin_avatar.png' COMMENT '头像',
-  PRIMARY KEY (`AdminId`, `AdminAccount`) USING BTREE
+  PRIMARY KEY (`AdminId`) USING BTREE,
+  UNIQUE INDEX `UN_Name`(`AdminName`) USING BTREE COMMENT '姓名唯一',
+  UNIQUE INDEX `UN_Account`(`AdminAccount`) USING BTREE COMMENT '账号唯一'
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_manager
 -- ----------------------------
 INSERT INTO `tb_manager` VALUES (1, '赵思', '1159902844@qq.com', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '3', '1', 'public/upload/img/adminAvatar/default_admin_avatar.png');
+INSERT INTO `tb_manager` VALUES (17, '刘盼', 'liupan@qq.com', 'asdzxc456', '2', '1', 'public/upload/img/adminAvatar/633249.jpg');
+INSERT INTO `tb_manager` VALUES (18, '汤亮亮', 'tangliangliang@qq.com', 'asdzxc456', '1', '1', 'public/upload/img/adminAvatar/796108.jpg');
+INSERT INTO `tb_manager` VALUES (19, '王新翔', 'wangxinxiang@qq.com', 'asdzxc456', '1', '1', 'public/upload/img/adminAvatar/625916.jpg');
+INSERT INTO `tb_manager` VALUES (20, '王爽', 'wangshuang@qq.com', 'asdzxc456', '2', '1', 'public/upload/img/adminAvatar/信号台.jpg');
+INSERT INTO `tb_manager` VALUES (21, '刘胜胜', 'liusheng@qq.com', 'asdzxc456', '1', '1', 'public/upload/img/adminAvatar/796108.jpg');
 
 -- ----------------------------
 -- Table structure for tb_order
