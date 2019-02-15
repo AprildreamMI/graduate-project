@@ -35,6 +35,10 @@ module.exports = function(app){
   app.route('/api/admin/updateAdminAccount')
     .put(MilinBookController.adminUpdateAdminAccount)
 
+  // 修改密码
+  app.route('/api/admin/updateAdminPwd')
+    .put(MilinBookController.adminUpdateAdminPwd)
+
   // 上传文件
   app.route('/api/admin/upload')
     .post(MilinBookController.adminUploadAvatar)

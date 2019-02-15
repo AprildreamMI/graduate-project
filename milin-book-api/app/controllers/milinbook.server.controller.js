@@ -23,6 +23,18 @@ let isRoot =  (req, res) => {
   }
 }
 
+let getAdminId = (req, res) => {
+  if (!req.cookies.admin_me) {
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write('<head><meta charset="utf-8"/></head>');
+    res.end(`<h1>错误！！！！</h1><br/>
+             <h2>请登录</h2>`);
+    return res.send()
+  }
+  let admin_me = JSON.parse(req.cookies.admin_me)
+  return admin_me.AdminId
+}
+
 module.exports = {
 
     // 测试数据
@@ -280,6 +292,59 @@ module.exports = {
           },
           code: 0,
           message: "更新账号信息成功"
+        })
+      }
+    })
+  },
+
+  // 更新密码
+  adminUpdateAdminPwd (req, res, next) {
+    // 获取当前登陆的管理员id
+    let adminId = getAdminId(req, res)
+    console.log('body', req.body, 'id', adminId)
+    async.series([
+      callback => {
+        let sql = `SELECT * FROM tb_manager WHERE AdminId = ${adminId} AND AdminPwd = '${req.body.oldPwd}'`
+        db.query(sql, (err, result) => {
+          console.log('result', result)
+          if (result[0]) {
+            callback(err)
+          } else {
+            return res.status(200).json({
+              data: null,
+              code: 1,
+              message:"旧密码不对，请重新输入"
+            })
+          }
+        })
+      },
+      callback => {
+        let sql = `UPDATE tb_manager SET AdminPwd = '${req.body.confirmPwd}' WHERE AdminId = ${adminId}`
+        db.query(sql, (err, result) => {
+          // 更新成功
+          if (result.affectedRows === 1) {
+            callback(err); 
+          } else {
+            return res.status(200).json({
+              data:null,
+              code:1,
+              message: "修改密码失败"
+            })
+          }
+        })
+      }
+    ], (err, result) => {
+      if (err) {
+        res.status(200).json({
+          data: null,
+          code: -1,
+          message: "添加管理员账号失败"
+        })
+      } else {
+        return res.status(200).json({
+          data:null,
+          code:0,
+          message: "修改密码成功"
         })
       }
     })

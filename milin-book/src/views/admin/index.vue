@@ -21,8 +21,8 @@
         </div>
         <div class="handles">
           <el-button @click="openUpdateAdminAccountDialog" type="primary" size="small">编 辑</el-button>
-          <el-button type="primary" size="small">改 密</el-button>
-          <el-button type="danger" size="small">注 销</el-button>
+          <el-button @click="isShowUpdateAdminAccountPwdDialog = true" type="primary" size="small">改 密</el-button>
+          <el-button @click="logOut" type="danger" size="small">注 销</el-button>
         </div>
         <div class="border-box"></div>
       </div>
@@ -103,6 +103,41 @@
         <el-button type="primary" @click="updateAdminAccount('updateAccountFrom')">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 修改密码 -->
+    <el-dialog custom-class="my-el-dialog" :visible.sync="isShowUpdateAdminAccountPwdDialog" width="420px" top="120px">
+      <div class="handle-title text-16-M">
+        修改密码
+      </div>
+      <div class="add-account-content add-account-from">
+        <el-form :model="pwFrom" :rules="pwRules" ref="pwFrom" label-width="100px" hide-required-asterisk label-position="left">
+          <div class="from-item">
+            <el-form-item label="旧密码" prop="oldPwd">
+              <div class="item-input">
+                <el-input type="password" v-model="pwFrom.oldPwd"></el-input>
+              </div>
+            </el-form-item>
+          </div>
+          <div class="from-item">
+            <el-form-item label="新密码" prop="newPwd">
+              <div class="item-input">
+                <el-input type="password" v-model="pwFrom.newPwd"></el-input>
+              </div>
+            </el-form-item>
+          </div>
+          <div class="from-item">
+            <el-form-item label="确认新密码" prop="confirmPwd">
+              <div class="item-input">
+                <el-input type="password" v-model="pwFrom.confirmPwd"></el-input>
+              </div>
+            </el-form-item>
+          </div>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="clearInput('pwFrom')">取 消</el-button>
+        <el-button type="primary" @click="changePw('pwFrom')">确 定</el-button>
+      </span>
+    </el-dialog>
     <!-- 右主要内容区 -->
     <router-view></router-view>
   </layout>
@@ -110,11 +145,51 @@
 <script>
 import * as api from '../../api'
 import cookie from '../../utils/cookie.js'
+import SHA256 from 'js-sha256'
 export default {
   data () {
+    var confirmPwd = (rule, value, callback) => {
+      if (value !== this.pwFrom.newPwd) {
+        callback(new Error('两次输入密码不一致!'))
+      } else {
+        callback()
+      }
+    }
+    var newPwd = (rule, value, callback) => {
+      if (value === this.pwFrom.oldPwd) {
+        callback(new Error('新密码不能和旧密码一致'))
+      } else {
+        callback()
+      }
+    }
     return {
+      // 更改密码
+      isShowUpdateAdminAccountPwdDialog: false,
       // 关闭或打开更新表单的Dialog
       isShowUpdateAdminAccountDialog: false,
+      // 密码表单
+      pwFrom: {
+        oldPwd: '',
+        newPwd: '',
+        confirmPwd: ''
+      },
+      // 修改密码表单验证
+      pwRules: {
+        oldPwd: [
+          { required: true, message: '请输入旧密码', trigger: 'blur' },
+          { pattern: /[A-Za-z].*[0-9]|[0-9].*[A-Za-z][\W_]{8,}/, message: '密码格式错误  大于8位,必须同时包含数字和字母', trigger: 'blur' }
+        ],
+        newPwd: [
+          { required: true, message: '请输入新密码', trigger: 'blur' },
+          { validator: newPwd, trigger: 'blur' },
+          { pattern: /[A-Za-z].*[0-9]|[0-9].*[A-Za-z][\W_]{8,}/, message: '密码格式错误  大于8位,必须同时包含数字和字母', trigger: 'blur' }
+        ],
+        confirmPwd: [
+          { required: true, message: '请确认新密码', trigger: 'blur' },
+          { validator: confirmPwd, trigger: 'blur' },
+          { pattern: /[A-Za-z].*[0-9]|[0-9].*[A-Za-z][\W_]{8,}/, message: '密码格式错误  大于8位,必须同时包含数字和字母', trigger: 'blur' }
+        ]
+      },
       // 更新账号的表单
       updateAdminAccountFrom: {
         AdminId: '',
@@ -194,6 +269,54 @@ export default {
         }
       })
     },
+    // 取消修改密码 重置表单
+    clearInput (formName) {
+      this.$refs[formName].resetFields()
+      this.isShowUpdateAdminAccountPwdDialog = false
+    },
+    //  检验合法性并进行修改
+    changePw (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let loading = this.$loading({
+            lock: true,
+            text: '正在更新管理员密码中',
+            background: 'rgba(0, 0, 0, 0.2)'
+          })
+          api.adminUpdateAdminPwd({
+            oldPwd: SHA256(this.pwFrom.oldPwd),
+            newPwd: SHA256(this.pwFrom.newPwd),
+            confirmPwd: SHA256(this.pwFrom.confirmPwd)
+          }).then(res => {
+            if (res.data.code === 0) {
+              this.$message.success(res.data.message)
+              loading.close()
+
+              // 重置表单
+              this.clearInput(formName)
+              // 退出
+              this.logOut()
+            } else {
+              this.$message.error(res.data.message)
+              loading.close()
+            }
+          }).catch((err) => {
+            console.log(err)
+            this.$message.error('更新管理员账号失败，请重试')
+            loading.close()
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    // 注销功能
+    logOut () {
+      cookie.remove('admin_me')
+      this.$router.push('/admin/login')
+    },
+    // 更新时上传头像成功
     updateHandleAvatarSuccess (res, file) {
       if (res.code === 0) {
         this.$message.success('上传头像成功')

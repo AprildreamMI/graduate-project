@@ -33,3 +33,6 @@ export const adminUpdateAdminAccountStatus = (data) => put('/admin/updateAdminAc
 
 // 更新管理员账号信息
 export const adminUpdateAdminAccount = (data) => put('/admin/updateAdminAccount', data)
+
+// 更新登陆账号的密码 id 在cookie 中 无需传递id
+export const adminUpdateAdminPwd = (data) => put('/admin/updateAdminPwd', data)

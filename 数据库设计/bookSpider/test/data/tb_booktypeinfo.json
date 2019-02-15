@@ -1,0 +1,112 @@
+{
+    "RECORDS": [
+        {
+            "BookTypeId": "3",
+            "BookTypeName": "小说"
+        },
+        {
+            "BookTypeId": "4",
+            "BookTypeName": "成功/励志"
+        },
+        {
+            "BookTypeId": "5",
+            "BookTypeName": "心理学"
+        },
+        {
+            "BookTypeId": "6",
+            "BookTypeName": "童书"
+        },
+        {
+            "BookTypeId": "7",
+            "BookTypeName": "亲子/家教"
+        },
+        {
+            "BookTypeId": "8",
+            "BookTypeName": "中小学教辅"
+        },
+        {
+            "BookTypeId": "9",
+            "BookTypeName": "文学"
+        },
+        {
+            "BookTypeId": "10",
+            "BookTypeName": "艺术"
+        },
+        {
+            "BookTypeId": "11",
+            "BookTypeName": "历史"
+        },
+        {
+            "BookTypeId": "12",
+            "BookTypeName": "传记"
+        },
+        {
+            "BookTypeId": "13",
+            "BookTypeName": "青春文学"
+        },
+        {
+            "BookTypeId": "14",
+            "BookTypeName": "管理"
+        },
+        {
+            "BookTypeId": "15",
+            "BookTypeName": "社会科学"
+        },
+        {
+            "BookTypeId": "16",
+            "BookTypeName": "育儿/早教"
+        },
+        {
+            "BookTypeId": "17",
+            "BookTypeName": "古籍"
+        },
+        {
+            "BookTypeId": "18",
+            "BookTypeName": "文化"
+        },
+        {
+            "BookTypeId": "19",
+            "BookTypeName": "科普读物"
+        },
+        {
+            "BookTypeId": "20",
+            "BookTypeName": "孕产/胎教"
+        },
+        {
+            "BookTypeId": "21",
+            "BookTypeName": "投资理财"
+        },
+        {
+            "BookTypeId": "22",
+            "BookTypeName": "时尚/美妆"
+        },
+        {
+            "BookTypeId": "23",
+            "BookTypeName": "计算机/网络"
+        },
+        {
+            "BookTypeId": "24",
+            "BookTypeName": "工具书"
+        },
+        {
+            "BookTypeId": "25",
+            "BookTypeName": "动漫/幽默"
+        },
+        {
+            "BookTypeId": "26",
+            "BookTypeName": "政治/军事"
+        },
+        {
+            "BookTypeId": "27",
+            "BookTypeName": "风水/占卜"
+        },
+        {
+            "BookTypeId": "28",
+            "BookTypeName": "哲学/宗教"
+        },
+        {
+            "BookTypeId": "29",
+            "BookTypeName": "经济"
+        }
+    ]
+}
