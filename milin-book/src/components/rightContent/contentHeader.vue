@@ -1,5 +1,5 @@
 <template>
-  <div class="header header-fixed">
+  <div class="header">
     <slot></slot>
   </div>
 </template>
@@ -12,7 +12,9 @@ export default {
   .header {
     display: flex;
     width: 100%;
-    height: 50px;
+    height: 100px;
+    min-width: 1090px;
+    padding: 20px 20px 0 20px;
     background-color: white;
   }
 </style>

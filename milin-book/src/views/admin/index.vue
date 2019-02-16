@@ -5,7 +5,7 @@
       <div class="logo">
         <img :src="'http://localhost:3000/'+admin_me.AdminAvatar" alt="">
         <div class="logo-title-box">
-          <h2 class="text-24-R">管理员:</h2>
+          <!-- <h2 class="text-24-R">管理员:</h2> -->
           <div class="logo-title-box-name">
             <p class="text-24-R">{{ admin_me.AdminName }}</p>
             <el-tooltip class="item" effect="dark" content="Right Center 提示文字" placement="right">

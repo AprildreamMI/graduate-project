@@ -11,7 +11,7 @@
  Target Server Version : 80014
  File Encoding         : 65001
 
- Date: 15/02/2019 18:59:29
+ Date: 16/02/2019 21:21:18
 */
 
 SET NAMES utf8mb4;
@@ -40,10 +40,10 @@ CREATE TABLE `tb_bookinfo`  (
   `BookStoremount` int(10) UNSIGNED NOT NULL COMMENT '图书库存量',
   `BookPackstyle` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '封装方式',
   PRIMARY KEY (`BookId`) USING BTREE,
-  INDEX `BookTypeId_F`(`BookTypeId`) USING BTREE,
   UNIQUE INDEX `BookISBN_F`(`Bookisbn`) USING BTREE COMMENT 'ISBN 书籍编号唯一',
+  INDEX `BookTypeId_F`(`BookTypeId`) USING BTREE,
   CONSTRAINT `BookTypeId_F` FOREIGN KEY (`BookTypeId`) REFERENCES `tb_booktypeinfo` (`BookTypeId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 427 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_bookinfo
@@ -453,7 +453,7 @@ CREATE TABLE `tb_booktypeinfo`  (
   `BookTypeId` int(11) NOT NULL AUTO_INCREMENT COMMENT '图书类型编号 自增字段',
   `BookTypeName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '	\r\n类别名称',
   PRIMARY KEY (`BookTypeId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_booktypeinfo
@@ -502,7 +502,7 @@ CREATE TABLE `tb_comment`  (
   INDEX `CustomerId_C_F`(`CustomerId`) USING BTREE,
   CONSTRAINT `BookId_C_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `CustomerId_C_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_customerinfo
@@ -512,20 +512,31 @@ CREATE TABLE `tb_customerinfo`  (
   `CustomerId` int(11) NOT NULL AUTO_INCREMENT COMMENT '客户编号',
   `CustomerName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '客户昵称',
   `CustomerPwd` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '客户密码',
-  `CustomerTrueName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '真实姓名',
+  `CustomerTrueName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '真实姓名',
   `CustomerSex` enum('1','2') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '性别',
   `CustomerTel` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '客户电话',
   `CustomerEmail` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'E-mail',
-  `CustomerAddr` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '地址',
+  `CustomerAddr` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '城市地址',
   `CustomerRegTime` datetime(0) NOT NULL COMMENT '注册时间',
-  `CustomerQues` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '提示问题',
-  `CustomerAnswer` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '问题答案',
-  `CustomerLogTime` int(11) NOT NULL COMMENT '登陆次数',
-  `CustomerLastLogT` datetime(0) NOT NULL COMMENT '最近登陆时间',
-  `addressId` int(11) NOT NULL COMMENT '默认的收货地址',
-  PRIMARY KEY (`CustomerId`, `CustomerName`, `CustomerEmail`) USING BTREE,
-  INDEX `CustomerId`(`CustomerId`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  `CustomerLogCount` int(11) UNSIGNED NOT NULL COMMENT '登陆次数',
+  `CustomerLastLogTime` datetime(0) NULL DEFAULT NULL COMMENT '最近登陆时间',
+  `addressId` int(11) NULL DEFAULT NULL COMMENT '默认的收货地址',
+  `CustomerAvatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'public/upload/img/userAvatar/default_user_avater.jpg' COMMENT '客户的头像',
+  `CustomerStatus` enum('1','0') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '1' COMMENT '用户的状态\r\n1、正常\r\n2、禁用',
+  PRIMARY KEY (`CustomerId`) USING BTREE,
+  INDEX `CustomerId`(`CustomerId`) USING BTREE,
+  UNIQUE INDEX `customerinfoName_F`(`CustomerName`) USING BTREE COMMENT '客户的昵称唯一性',
+  UNIQUE INDEX `customerinfoEmail_F`(`CustomerEmail`) USING BTREE COMMENT '邮件即为账号唯一性',
+  UNIQUE INDEX `customerinfoTel_F`(`CustomerTel`) USING BTREE COMMENT '客户手机号码唯一性'
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tb_customerinfo
+-- ----------------------------
+INSERT INTO `tb_customerinfo` VALUES (1, '死者的代言人', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278540', '1159902844@qq.com', '武汉', '2019-02-16 17:04:58', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (2, '死者的代言人2', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278541', '1159902544@qq.com', '武汉', '2019-02-16 17:06:27', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (3, '安德的游戏', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '安德', '1', '17566458892', 'andedeyouxi@qq.com', '虫巢', '2019-02-16 17:12:54', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (4, '我不是许三观', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '许三观', '1', '17388902245', 'xusanguan@qq.com', '不详', '2019-02-16 17:14:20', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 
 -- ----------------------------
 -- Table structure for tb_manager
@@ -547,7 +558,7 @@ CREATE TABLE `tb_manager`  (
 -- ----------------------------
 -- Records of tb_manager
 -- ----------------------------
-INSERT INTO `tb_manager` VALUES (1, '赵思思', '1159902844@qq.com', '795f40f4bd2d37041bc9f451f9e4e1484362492b16a31ee6ba20ac5463745347', '3', '1', 'public/upload/img/adminAvatar/default_admin_avatar.png');
+INSERT INTO `tb_manager` VALUES (1, '赵思思', '1159902844@qq.com', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '3', '1', 'public/upload/img/adminAvatar/default_admin_avatar.png');
 INSERT INTO `tb_manager` VALUES (17, '刘盼', 'liupan@qq.com', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '2', '1', 'public/upload/img/adminAvatar/633249.jpg');
 INSERT INTO `tb_manager` VALUES (18, '汤亮亮', 'tangliangliang@qq.com', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '1', '1', 'public/upload/img/adminAvatar/796108.jpg');
 INSERT INTO `tb_manager` VALUES (19, '王新翔', 'wangxinxiang@qq.com', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '1', '1', 'public/upload/img/adminAvatar/625916.jpg');
@@ -582,7 +593,7 @@ CREATE TABLE `tb_order`  (
   INDEX `BookId_O_F`(`BookId`) USING BTREE,
   CONSTRAINT `BookId_O_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `CustomerId_O_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_parameter
@@ -618,7 +629,7 @@ CREATE TABLE `tb_shopbook`  (
   INDEX `BookId_F`(`BookId`) USING BTREE,
   CONSTRAINT `BookId_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `CustomerId_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_useraddress
@@ -631,7 +642,7 @@ CREATE TABLE `tb_useraddress`  (
   PRIMARY KEY (`addressId`) USING BTREE,
   INDEX `CustomerId_A_F`(`CustomerId`) USING BTREE,
   CONSTRAINT `CustomerId_A_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for test

@@ -15,9 +15,23 @@ export const getAll = () => get(`/test`)
 */
 
 /*
+  客户前台 start
+*/
+
+export const shopSignIn = (data) => post('/shop/signIn', data)
+
+/*
+  客户前台 end
+*/
+
+// ==================================================================
+
+/*
   后台管理 start
 */
 export const adminLogin = (data) => post('/admin/login', data)
+
+// =========管理员账号管理=================
 
 // 获取管理员账号列表
 export const adminGetAccountAll = () => get('/admin/getAccountAll')
@@ -31,7 +45,14 @@ export const deleteAdminAccount = (data) => remove('/admin/deleteAdminAccount', 
 // 更新管理员账号状态
 export const adminUpdateAdminAccountStatus = (data) => put('/admin/updateAdminAccountStatus', data)
 
-// 更新管理员账号信息
+// =========用户账号管理=================
+
+// 分页及带查询条件获取用户列表
+export const adminGetUserList = (data) => get('/admin/getUserList', data)
+
+// =========当前管理员账号管理=================
+
+// 更新当前管理员账号信息
 export const adminUpdateAdminAccount = (data) => put('/admin/updateAdminAccount', data)
 
 // 更新登陆账号的密码 id 在cookie 中 无需传递id

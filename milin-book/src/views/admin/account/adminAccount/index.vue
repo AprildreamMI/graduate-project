@@ -435,39 +435,6 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-  .img-bg {
-    .avatar-uploader .el-upload {
-      border: 1px dashed #d9d9d9;
-      border-radius: 6px;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-    }
-    .avatar-uploader .el-upload:hover {
-      border-color: #409EFF;
-    }
-    .avatar-uploader-icon {
-      font-size: 28px;
-      color: #8c939d;
-      width: 110px;
-      height: 110px;
-      line-height: 110px;
-      text-align: center;
-    }
-    .avatar {
-      width: 110px;
-      height: 110px;
-      display: block;
-    }
-    .delete-bg {
-      cursor: pointer;
-      &:hover {
-        color: $primary-color;
-      }
-    }
-  }
-</style>
 
 <style lang="scss" scoped>
   .row {
@@ -483,7 +450,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    padding: 20px 20px 0 20px;
+    // padding: 20px 20px 0 20px;
     min-width: 1090px;
     overflow: auto;
     .card {

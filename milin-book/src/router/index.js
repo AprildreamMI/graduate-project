@@ -10,10 +10,16 @@ document.body.appendChild(bar.$el)
 Vue.use(Router)
 
 const routes = [
+  // 等前台做好后 项目重定向为 商城首页
   // 重定向登录页
   {
     path: '/',
     component: () => import('../views/test/test-01.vue')
+  },
+  // 客户端 有登陆页 注册在登录时
+  {
+    path: '/shop/login',
+    component: () => import('../views/shop/login')
   },
   // 后台管理登陆页面
   {

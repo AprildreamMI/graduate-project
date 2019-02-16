@@ -5,35 +5,10 @@ var fs = require('fs');
 var async = require('async');
 var urlPase = require('url');
 
-// 检测是不是最高管理员
-let isRoot =  (req, res) => {
-  if (!req.cookies.admin_me) {
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write('<head><meta charset="utf-8"/></head>');
-    res.end('<h1>错误！！！！没有权限</h1>');
-    return res.send()
-  }
-  let admin_me = JSON.parse(req.cookies.admin_me)
-
-  if (Number(admin_me.AdminFlag) < 3) {
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write('<head><meta charset="utf-8"/></head>');
-    res.end('<h1>错误！！！！没有权限</h1>');
-    return res.send()
-  }
-}
-
-let getAdminId = (req, res) => {
-  if (!req.cookies.admin_me) {
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write('<head><meta charset="utf-8"/></head>');
-    res.end(`<h1>错误！！！！</h1><br/>
-             <h2>请登录</h2>`);
-    return res.send()
-  }
-  let admin_me = JSON.parse(req.cookies.admin_me)
-  return admin_me.AdminId
-}
+// 用户工具类
+var userUtils = require('../utils/user')
+// 管理员工具类
+var adminUtils = require('../utils/admin')
 
 module.exports = {
 
@@ -56,6 +31,124 @@ module.exports = {
         }
     })
   },
+
+  /* 
+    客户前台 start
+  */
+
+  // 用户注册
+ shopSignIn (req, res, next) {
+  console.log('req.body注册', req.body)
+  async.series([
+    callback => {
+      let query_name_sql = `SELECT * FROM tb_customerinfo WHERE CustomerName = '${req.body.customerName}'`
+      db.query(query_name_sql, (err, result) => {
+        if (result[0]) {
+          return res.status(200).json({
+              data: null,
+              code: 1,
+              message:"昵称重复, 注册失败"
+          }); 
+        } else {
+          callback(err)
+        }
+      })
+    },
+    callback => {
+      let query_account_sql = `SELECT * FROM tb_customerinfo WHERE CustomerEmail = '${req.body.customerEmail}'`
+      db.query(query_account_sql, (err, result) => {
+        if (result[0]) {
+          return res.status(200).json({
+              data: null,
+              code: 1,
+              message:"邮箱重复, 注册失败"
+          }); 
+        } else {
+          callback(err)
+        }
+      })
+    },
+    callback => {
+      let query_tel_sql = `SELECT * FROM tb_customerinfo WHERE CustomerTel = '${req.body.customerTel}'`
+      db.query(query_tel_sql, (err, result) => {
+        if (result[0]) {
+          return res.status(200).json({
+              data: null,
+              code: 1,
+              message:"手机号重复, 注册失败"
+          }); 
+        } else {
+          callback(err)
+        }
+      })
+    },
+    callback => {
+      let sql = `INSERT INTO tb_customerinfo
+                (
+                  CustomerName,
+                  CustomerEmail,
+                  CustomerTrueName,
+                  CustomerSex,
+                  CustomerTel,
+                  CustomerAddr,
+                  CustomerPwd,
+                  CustomerAvatar,
+                  CustomerRegTime,
+                  CustomerLogCount
+                )
+                VALUES
+                (
+                  '${req.body.customerName}',
+                  '${req.body.customerEmail}',
+                  '${req.body.customerTrueName}',
+                  '${req.body.customerSex}',
+                  '${req.body.customerTel}',
+                  '${req.body.customerAddr}',
+                  '${req.body.customerPwd}',
+                  '${req.body.customerAvatar}',
+                  '${adminUtils.getNowFormatDate()}',
+                  ${0}
+                )`
+      db.query(sql, (err, result) => {
+        console.log('err注册',err)
+        console.log('result注册', result, sql)
+        // 查看受影响的行数 如果等于 1 
+        if (result.affectedRows === 1) {
+          callback(err)
+        } else {
+          res.status(200).json({
+            data: null,
+            code: 1,
+            message: "注册账号失败"
+          })
+        }
+      })
+    }
+  ], (err, result) => {
+    if (err) {
+      res.status(200).json({
+        data: err,
+        code: 1,
+        message: "注册账号失败"
+      })
+    } else {
+      res.status(200).json({
+        // 返回新插入的Id
+        data: {
+          insertId: result.insertId
+        },
+        code: 0,
+        message: "注册账号成功"
+      })
+    }
+  })
+ },
+
+  /* 
+    客户前台 end
+  */
+
+  // ========================================================================================
 
   /* 
     后台管理  start
@@ -100,9 +193,11 @@ module.exports = {
     })
   },
 
+  // ==========管理员列表管理================
+
   // 获取所有管理员账号
   adminGetAccountAll (req, res, next) {
-    isRoot(req, res)
+    adminUtils.isRoot(req, res)
     let currentAdminId = JSON.parse(req.cookies.admin_me).AdminId
     let sql = `SELECT * FROM tb_manager WHERE AdminId != ${currentAdminId}`
     db.query(sql, (err, result) => {
@@ -126,7 +221,7 @@ module.exports = {
 
   // 添加管理员账号
   adminAddAdminAccount (req, res, next) {
-    isRoot(req, res)
+    adminUtils.isRoot(req, res)
     async.series([
       callback => {
         let query_name_sql = `SELECT * FROM tb_manager WHERE AdminName = '${req.body.AdminName}'`
@@ -196,7 +291,7 @@ module.exports = {
 
   // 删除管理员账号
   adminDeleteAdminAccount (req, res, next) {
-    isRoot(req, res)
+    adminUtils.isRoot(req, res)
     let sql = `DELETE FROM tb_manager WHERE AdminId = ${Number(req.query.adminId)}`
     db.query(sql, (err, result) => {
       if (err) {
@@ -224,7 +319,7 @@ module.exports = {
 
   // 更新账号的状态
   adminUpdateAdminAccountStatus (req, res, next) {
-    isRoot(req, res)
+    adminUtils.isRoot(req, res)
     console.log('body', req.body)
     let sql = `UPDATE tb_manager SET AdminStatus = '${req.body.AdminStatus}' WHERE AdminId = ${req.body.AdminId}`
     db.query(sql, (err, result) => {
@@ -251,9 +346,9 @@ module.exports = {
     });
   },
 
-  // 更新账号信息
+  // 更新当前账号信息
   adminUpdateAdminAccount (req, res, next) {
-    isRoot(req, res)
+    adminUtils.isRoot(req, res)
     async.waterfall([
       callback => {
         let sql = `UPDATE tb_manager SET AdminName = '${req.body.AdminName}', AdminFlag = '${req.body.AdminFlag}', AdminAvatar = '${req.body.AdminAvatar}' WHERE AdminId = ${req.body.AdminId}`
@@ -297,10 +392,10 @@ module.exports = {
     })
   },
 
-  // 更新密码
+  // 更新当前账号密码
   adminUpdateAdminPwd (req, res, next) {
     // 获取当前登陆的管理员id
-    let adminId = getAdminId(req, res)
+    let adminId = adminUtils.getAdminId(req, res)
     console.log('body', req.body, 'id', adminId)
     async.series([
       callback => {
@@ -349,6 +444,47 @@ module.exports = {
       }
     })
   },
+
+  // ==========用户列表管理===========
+
+  // 获取用户列表 分页 传入like 和 页码 及 每页数量 , 先like 统计总条数 然后再分页查
+  adminGetUserAccountList (req, res, next) {
+    console.log('获取用户列表', req.body)
+    async.waterfall([
+      callback => {
+        let sql = `SELECT count(*) AS total FROM tb_customerinfo WHERE CustomerName LIKE '%${req.body.searchText}%'`
+        db.query(sql, (err, result) => {
+          callback(err, result[0].total)
+        })
+      },
+      (total, callback) => {
+        let skip = (req.body.pageNum - 1) * req.body.pageSize
+        console.log('total', total)
+        console.log('skip', skip)
+        let sql = `SELECT * FROM tb_customerinfo LIMIT ${Number(skip)}, ${Number(req.body.pageSize)}`
+        db.query(sql, (err, result) => {
+          callback(err, result)
+        })
+      }
+    ], function(err, results) {
+      if (err) {
+        res.status(200).json({
+          data:err,
+          code:-1,
+          message: "获取用户账号列表失败"
+        });
+      } else {
+        res.status(200).json({
+          data: {
+            userList: results
+          },
+          code: 0,
+          message: "获取用户账号列表成功"
+        })
+      }
+    })
+  },
+
 
   // 添加管理员账号时 上传头像
   adminUploadAvatar (req, res, next) {
