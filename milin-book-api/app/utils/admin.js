@@ -22,6 +22,28 @@ module.exports = {
   },
 
   /**
+   * 判断是不是第二等级的管理员
+   * @param {*} req 
+   * @param {*} res 
+   */
+  isBooksAdmin (req, res) {
+    if (!req.cookies.admin_me) {
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.write('<head><meta charset="utf-8"/></head>');
+      res.end('<h1>错误！！！！没有权限</h1>');
+      return res.send()
+    }
+    let admin_me = JSON.parse(req.cookies.admin_me)
+  
+    if (Number(admin_me.AdminFlag) < 2) {
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.write('<head><meta charset="utf-8"/></head>');
+      res.end('<h1>错误！！！！没有权限</h1>');
+      return res.send()
+    }
+  },
+
+  /**
    * 获取当前管理员的id
    * @param {*} req 
    * @param {*} res 
@@ -39,7 +61,7 @@ module.exports = {
   },
 
   /**
-   * 格式化事件 存入数据库
+   * 格式化时间 存入数据库
    */
   getNowFormatDate() {
       var date = new Date();

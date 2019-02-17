@@ -55,6 +55,25 @@ module.exports = function(app){
   app.route('/api/admin/getUserList')
     .get(MilinBookController.adminGetUserAccountList)
 
+  // 更改用户账号状态
+  app.route('/api/admin/changeUserStatus')
+    .put(MilinBookController.adminChangeUserAccountStatus)
+
+  // 删除用户
+  app.route('/api/admin/deleteUserAccount')
+    .delete(MilinBookController.adminDeleteUserAccount)
+
+  
+  // ==========书籍管理===========
+
+  //  获取书籍类型列表
+  app.route('/api/admin/getBookTypeList')
+    .get(MilinBookController.adminGetBookTypeList)
+
+  // 获取书籍列表
+  app.route('/api/admin/getBookList')
+    .get(MilinBookController.adminGetBookList)
+  
 
   // ==========当前管理员账号管理===========
 

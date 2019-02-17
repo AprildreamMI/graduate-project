@@ -48,7 +48,17 @@ const routes = [
       },
       {
         path: 'account/userAccount',
-        component: () => import('../views/admin/account/userAccount')
+        component: () => import('../views/admin/account/userAccount'),
+        meta: {
+          requireAuthAdminAccount: true
+        }
+      },
+      {
+        path: 'books',
+        component: () => import('../views/admin/books'),
+        meta: {
+          requireAuthAdminBooks: true
+        }
       }
     ]
   }
@@ -107,9 +117,18 @@ router.beforeEach(async (to, from, next) => {
       next('/login')
     }
     // 判断需要管理员账号登录
+    // some()是对数组中每一项运行给定函数，如果该函数对任一项返回true，则返回true。
   } else if (to.matched.some(res => res.meta.requireAuthAdmin)) {
-    if (cookie.get('admin_me')) { // 判断是否已登陆
-      next()
+    // 判断管理员是否已登陆
+    if (cookie.get('admin_me')) {
+      // 判断是不是最高权限管理员
+      if (to.meta.requireAuthAdminAccount && !(Number(JSON.parse(cookie.get('admin_me')).AdminFlag) < 3)) {
+        next()
+      } else if (to.meta.requireAuthAdminBooks && !(Number(JSON.parse(cookie.get('admin_me')).AdminFlag) < 2)) {
+        next()
+      } else {
+        next('/admin/login')
+      }
     } else {
       next('/admin/login')
     }

@@ -129,3 +129,15 @@ body {
 .el-table .success-row {
   background: #f0f9eb;
 }
+
+.dialog-content {
+  width: 100%;
+  padding-top: 20px;
+  &.content-from {
+    .from-item {
+      .item-input {
+        width: 200px;
+      }
+    }
+  }
+}

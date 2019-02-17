@@ -11,7 +11,7 @@
  Target Server Version : 80014
  File Encoding         : 65001
 
- Date: 16/02/2019 21:21:18
+ Date: 17/02/2019 21:20:04
 */
 
 SET NAMES utf8mb4;
@@ -522,21 +522,29 @@ CREATE TABLE `tb_customerinfo`  (
   `CustomerLastLogTime` datetime(0) NULL DEFAULT NULL COMMENT '最近登陆时间',
   `addressId` int(11) NULL DEFAULT NULL COMMENT '默认的收货地址',
   `CustomerAvatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'public/upload/img/userAvatar/default_user_avater.jpg' COMMENT '客户的头像',
-  `CustomerStatus` enum('1','0') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '1' COMMENT '用户的状态\r\n1、正常\r\n2、禁用',
+  `CustomerStatus` enum('1','0') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '1' COMMENT '用户的状态\r\n1、正常\r\n0、禁用',
   PRIMARY KEY (`CustomerId`) USING BTREE,
-  INDEX `CustomerId`(`CustomerId`) USING BTREE,
   UNIQUE INDEX `customerinfoName_F`(`CustomerName`) USING BTREE COMMENT '客户的昵称唯一性',
   UNIQUE INDEX `customerinfoEmail_F`(`CustomerEmail`) USING BTREE COMMENT '邮件即为账号唯一性',
-  UNIQUE INDEX `customerinfoTel_F`(`CustomerTel`) USING BTREE COMMENT '客户手机号码唯一性'
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  UNIQUE INDEX `customerinfoTel_F`(`CustomerTel`) USING BTREE COMMENT '客户手机号码唯一性',
+  INDEX `CustomerId`(`CustomerId`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_customerinfo
 -- ----------------------------
 INSERT INTO `tb_customerinfo` VALUES (1, '死者的代言人', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278540', '1159902844@qq.com', '武汉', '2019-02-16 17:04:58', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
-INSERT INTO `tb_customerinfo` VALUES (2, '死者的代言人2', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278541', '1159902544@qq.com', '武汉', '2019-02-16 17:06:27', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (2, '死者的代言人2', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278541', '1159902544@qq.com', '武汉', '2019-02-16 17:06:27', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '0');
 INSERT INTO `tb_customerinfo` VALUES (3, '安德的游戏', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '安德', '1', '17566458892', 'andedeyouxi@qq.com', '虫巢', '2019-02-16 17:12:54', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 INSERT INTO `tb_customerinfo` VALUES (4, '我不是许三观', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '许三观', '1', '17388902245', 'xusanguan@qq.com', '不详', '2019-02-16 17:14:20', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (5, '明教教主', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '张无忌', '1', '17566844123', 'zhangwuji@qq.com', '光明顶', '2019-02-17 14:25:00', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (6, '峨嵋掌门', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '周芷若', '1', '17466502231', 'zhouzhiruo@qq.com', '峨眉', '2019-02-17 14:25:59', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (7, '郡主', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵敏', '2', '17655892234', 'zhaoming@qq.com', '大都', '2019-02-17 14:26:47', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (8, '昭儿', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '小昭', '2', '17655423321', 'xiaozhao@qq.com', '波斯', '2019-02-17 14:27:32', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (9, '武当掌门', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '张三丰', '2', '17566541120', 'zhangsanfeng@qq.com', '武当', '2019-02-17 14:28:33', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (10, '金毛狮王', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '谢逊', '1', '17633214487', 'xiexun@qq.com', '冰火岛', '2019-02-17 14:29:16', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (11, '韩天尊', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '韩立', '1', '17355489920', 'hanli@qq.com', '无涯海青元宫', '2019-02-17 14:31:28', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (12, '韩立伴侣', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '南宫婉儿', '2', '17566234421', 'nangongwaner@qq.com', '无涯海青元宫', '2019-02-17 14:33:03', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 
 -- ----------------------------
 -- Table structure for tb_manager

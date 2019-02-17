@@ -49,7 +49,7 @@
               <span slot="title">用户账号</span>
             </el-menu-item>
         </el-submenu>
-        <el-menu-item index="3">
+        <el-menu-item index="/admin/books">
           <i class="iconfont icon-shu alibaba-icont"></i>
           <span slot="title">书籍管理</span>
         </el-menu-item>

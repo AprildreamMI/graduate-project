@@ -320,7 +320,6 @@ module.exports = {
   // 更新账号的状态
   adminUpdateAdminAccountStatus (req, res, next) {
     adminUtils.isRoot(req, res)
-    console.log('body', req.body)
     let sql = `UPDATE tb_manager SET AdminStatus = '${req.body.AdminStatus}' WHERE AdminId = ${req.body.AdminId}`
     db.query(sql, (err, result) => {
       if (err) {
@@ -449,21 +448,32 @@ module.exports = {
 
   // 获取用户列表 分页 传入like 和 页码 及 每页数量 , 先like 统计总条数 然后再分页查
   adminGetUserAccountList (req, res, next) {
-    console.log('获取用户列表', req.body)
     async.waterfall([
       callback => {
-        let sql = `SELECT count(*) AS total FROM tb_customerinfo WHERE CustomerName LIKE '%${req.body.searchText}%'`
+        let sql = `SELECT count(*) AS total FROM tb_customerinfo WHERE CustomerName LIKE '%${req.query.searchText}%'`
         db.query(sql, (err, result) => {
           callback(err, result[0].total)
         })
       },
       (total, callback) => {
-        let skip = (req.body.pageNum - 1) * req.body.pageSize
-        console.log('total', total)
-        console.log('skip', skip)
-        let sql = `SELECT * FROM tb_customerinfo LIMIT ${Number(skip)}, ${Number(req.body.pageSize)}`
+        if (total <= 0) {
+          callback(null, {
+            result: [],
+            total: 0
+          })
+          return
+        }
+        let pageNum = req.query.pageNum
+        if (pageNum > total) {
+          pageNum = total
+        }
+        let skip = (pageNum - 1) * req.query.pageSize
+        let sql = `SELECT * FROM tb_customerinfo WHERE CustomerName LIKE '%${req.query.searchText}%' LIMIT ${Number(skip)}, ${Number(req.query.pageSize)}`
         db.query(sql, (err, result) => {
-          callback(err, result)
+          callback(err, {
+            result: result,
+            total: total
+          })
         })
       }
     ], function(err, results) {
@@ -476,7 +486,8 @@ module.exports = {
       } else {
         res.status(200).json({
           data: {
-            userList: results
+            userList: results.result,
+            total: results.total
           },
           code: 0,
           message: "获取用户账号列表成功"
@@ -485,6 +496,149 @@ module.exports = {
     })
   },
 
+  // 禁用或启用用户账号
+  adminChangeUserAccountStatus (req, res, next) {
+    adminUtils.isRoot(req, res)
+    let sql = `UPDATE tb_customerinfo SET CustomerStatus = '${req.body.newStatus}' WHERE CustomerId = ${req.body.userId}`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message: "更新用户账号状态失败"
+        });
+      }
+      if (result.affectedRows === 1) {
+        return res.status(200).json({
+          data: null,
+          code: 0,
+          message: "更新用户账号状态成功"
+        });
+      } else {
+        return res.status(200).json({
+          data:null,
+          code:1,
+          message: "更新用户账号状态失败"
+        });
+      }
+    });
+  },
+  
+  // 删除用户账号
+  adminDeleteUserAccount (req, res, next) {
+    adminUtils.isRoot(req, res)
+    let sql = `DELETE FROM tb_customerinfo WHERE CustomerId = ${req.query.userId}`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message:"删除用户账号失败"
+        });
+      }
+      if (result.affectedRows === 1) {
+        return res.status(200).json({
+          data: null,
+          code: 0,
+          message: "删除用户账号成功"
+        });
+      } else {
+        return res.status(200).json({
+          data:null,
+          code:1,
+          message:"删除用户账号失败"
+        });
+      }
+    });
+  },
+
+
+  // ==========书籍管理===========
+
+  // 获取书籍类型
+  adminGetBookTypeList (req, res, next) {
+    adminUtils.isBooksAdmin(req, res)
+    let sql = `SELECT BookTypeId AS value, BookTypeName AS label FROM tb_booktypeinfo`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message:"获取书籍类型列表失败"
+        });
+      } else {
+        return res.status(200).json({
+          data: {
+            bookTypeList: result
+          },
+          code: 0,
+          message: "获取书籍类型列表成功"
+        });
+      }
+    });
+  },
+
+  // 获取书籍列表 传入 搜索条件 书的类型 页码 每页的条目数
+  adminGetBookList (req, res, next) {
+    adminUtils.isBooksAdmin(req, res)
+    console.log()
+    async.waterfall([
+      callback => {
+        let sql = ''
+        if (!req.query.bookTypeId) {
+          sql = `SELECT count(*) AS total FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%'`
+        } else {
+          sql = `SELECT count(*) AS total FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%' AND BookTypeId = ${req.query.bookTypeId}`
+        }
+        db.query(sql, (err, result) => {
+          callback(err, result[0].total)
+        })
+      },
+      (total, callback) => {
+        if (total <= 0) {
+          callback(null, {
+            result: [],
+            total: 0
+          })
+          return
+        }
+        let sql = ''
+        let pageNum = req.query.pageNum
+        if (pageNum > total) {
+          pageNum = total
+        }
+        let skip = (pageNum - 1) * req.query.pageSize
+        if (!req.query.bookTypeId) {
+          sql = `SELECT * FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%' LIMIT ${skip}, ${req.query.pageSize}`
+        } else {
+          sql = `SELECT * FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%' AND BookTypeId = ${req.query.bookTypeId} LIMIT ${skip}, ${req.query.pageSize}`
+        }
+        db.query(sql, (err, result) => {
+          callback(err, {
+            result: result,
+            total: total
+          })
+        })
+      }
+    ], function(err, results) {
+      if (err) {
+        res.status(200).json({
+          data:err,
+          code:-1,
+          message: "获取图书列表失败"
+        });
+      } else {
+        res.status(200).json({
+          data: {
+            bookList: results.result,
+            total: results.total
+          },
+          code: 0,
+          message: "获取图书列表成功"
+        })
+      }
+    })
+  },
 
   // 添加管理员账号时 上传头像
   adminUploadAvatar (req, res, next) {

@@ -50,6 +50,20 @@ export const adminUpdateAdminAccountStatus = (data) => put('/admin/updateAdminAc
 // 分页及带查询条件获取用户列表
 export const adminGetUserList = (data) => get('/admin/getUserList', data)
 
+// 分页及带查询条件获取用户列表
+export const adminChangeUserStatus = (data) => put('/admin/changeUserStatus', data)
+
+// 删除用户账号
+export const adminDeleteUserAccount = (data) => remove('/admin/deleteUserAccount', data)
+
+// =========书籍列表管理=================
+
+// 获取书籍分类数据
+export const adminGetBookTypeList = () => get('/admin/getBookTypeList')
+
+// 获取书籍列表
+export const adminGetBookList = (data) => get('/admin/getBookList', data)
+
 // =========当前管理员账号管理=================
 
 // 更新当前管理员账号信息
