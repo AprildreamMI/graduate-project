@@ -12,6 +12,14 @@ body {
   background-repeat: no-repeat;
 }
 
+.shop-layout {
+  width: 100%;
+}
+.shop-w {
+  width: 1200px;
+  margin: 0 auto;
+}
+
 // 左浮动 右浮动
 .pull-left {
   float: left;
@@ -79,6 +87,7 @@ body {
   }
 }
 
+// 标题
 .handle-title {
   display: flex;
   align-items: center;
@@ -121,15 +130,15 @@ body {
   }
 }
 
-// 状态
+// 表格行 状态
 .el-table .warning-row {
   background: oldlace;
 }
-
 .el-table .success-row {
   background: #f0f9eb;
 }
 
+// dialog 的内容区
 .dialog-content {
   width: 100%;
   padding-top: 20px;

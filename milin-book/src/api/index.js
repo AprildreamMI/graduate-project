@@ -18,6 +18,10 @@ export const getAll = () => get(`/test`)
   客户前台 start
 */
 
+// 前台登陆
+export const shopLogin = (data) => post('/shop/login', data)
+
+// 前台注册
 export const shopSignIn = (data) => post('/shop/signIn', data)
 
 /*
@@ -63,6 +67,15 @@ export const adminGetBookTypeList = () => get('/admin/getBookTypeList')
 
 // 获取书籍列表
 export const adminGetBookList = (data) => get('/admin/getBookList', data)
+
+// 添加书籍
+export const adminAddBookInfo = (data) => post('/admin/addBookInfo', data)
+
+// 添加书籍
+export const adminUpdateBookInfo = (data) => put('/admin/updateBookInfo', data)
+
+// 改变书籍状态
+export const adminUpdateBookStatus = (data) => put('/admin/updateBookStatus', data)
 
 // =========当前管理员账号管理=================
 

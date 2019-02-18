@@ -1,7 +1,15 @@
 <template>
   <div class="login">
+    <div class="shop-w">
+      <div class="title-header">
+        <img width="150" src="/static/img/logo-black.png" alt="">
+        <h1 class="text-24-R">密林的书店</h1>
+      </div>
+    </div>
     <div class="w">
       <div class="login-box">
+        <div class="left-bg">
+        </div>
         <div class="right-from">
           <p class="from-title text-24-R">登录</p>
           <div class="login-from">
@@ -30,8 +38,6 @@
             <p>|</p>
             <p>忘记密码</p>
           </div>
-        </div>
-        <div class="right-bottom-bg">
         </div>
       </div>
     </div>
@@ -106,6 +112,9 @@
                   ref="uploadsAvatar"
                   class="avatar-uploader"
                   action="http://localhost:3000/api/admin/upload"
+                  :data="{
+                    uploadDir: 'userAvatar'
+                  }"
                   :show-file-list="false"
                   :on-success="handleAvatarSuccess"
                   :on-error="uploadsError"
@@ -226,12 +235,12 @@ export default {
             text: '正在登陆中',
             background: 'rgba(0, 0, 0, 0.2)'
           })
-          api.adminLogin({
-            AdminAccount: this.userForm.username,
-            AdminPwd: SHA256(this.userForm.password)
+          api.shopLogin({
+            username: this.userForm.username,
+            password: SHA256(this.userForm.password)
           }).then(res => {
             if (res.data.code === 0) {
-              if (res.data.data.me.AdminStatus === '0') {
+              if (res.data.data.me.CustomerStatus === '0') {
                 this.$message.error('登录失败，此账号已被禁用')
                 loading.close()
                 return
@@ -239,10 +248,10 @@ export default {
               this.$message.success(res.data.message)
               loading.close()
 
-              // 把me存储在cookie中 admin_me
-              cookie.set('admin_me', res.data.data.me)
-              this.$router.push('/admin')
               console.log(res.data)
+              // 把me存储在cookie中 user_me
+              cookie.set('user_me', res.data.data.me)
+              this.$router.push('/shop/home')
             } else {
               this.$message.error(res.data.message)
               loading.close()
@@ -308,7 +317,7 @@ export default {
     handleAvatarSuccess (res, file) {
       if (res.code === 0) {
         this.$message.success('上传头像成功')
-        this.newAdminAccountFrom.AdminAvatar = res.data.newAvatarPath
+        this.userSignInFrom.customerAvatar = res.data.Filepath
       } else {
         this.$message.error('上传头像失败')
       }
@@ -359,28 +368,42 @@ export default {
 <style lang="scss" scoped>
   .login {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
     width: 100%;
     height: 100vh;
-    background-image: url('/static/img/admin/login/登录-背景.png');
     overflow: hidden;
+    .title-header {
+      display: flex;
+      width: 100%;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      margin: 20px 0 30px 0;
+      h1 {
+        font-size: 36px;
+      }
+    }
     .w {
       width: 1200px;
       margin: 0 auto;
       .login-box {
-        position: relative;
+        display: flex;
         width: 100%;
         height: 650px;
-        border-radius: 6px;
-        background-image: url('/static/img/admin/login/登录-表单背景.png');
+        justify-content: space-around;
+        align-items: center;
+        .left-bg {
+          width: 600px;
+          height: 90%;
+          background-image: url('/static/img/login-left-bg.jpg');
+          background-size: cover;
+        }
         .right-from {
           display: flex;
           align-items: center;
           flex-direction: column;
-          position: absolute;
-          top: 77px;
-          right: 103px;
           width: 400px;
           height: 500px;
           background:rgba(251,253,250,1);
@@ -437,7 +460,6 @@ export default {
           width: 107px;
           height: 100px;
           right: 45px;
-          background-image: url(/static/img/admin/login/登录-表单人物.png);
           bottom: 54px;
         }
       }

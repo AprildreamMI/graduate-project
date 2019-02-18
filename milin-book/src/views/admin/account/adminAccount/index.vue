@@ -77,6 +77,9 @@
                     ref="uploadsAvatar"
                     class="avatar-uploader"
                     action="http://localhost:3000/api/admin/upload"
+                    :data="{
+                      uploadDir: 'adminAvatar'
+                    }"
                     :show-file-list="false"
                     :on-success="handleAvatarSuccess"
                     :on-error="uploadsError"
@@ -128,6 +131,9 @@
                 <div class="item-input img-bg">
                   <el-upload
                     ref="uploadsAvatar"
+                    :data="{
+                      uploadDir: 'adminAvatar'
+                    }"
                     class="avatar-uploader"
                     action="http://localhost:3000/api/admin/upload"
                     :show-file-list="false"
@@ -334,15 +340,16 @@ export default {
     handleAvatarSuccess (res, file) {
       if (res.code === 0) {
         this.$message.success('上传头像成功')
-        this.newAdminAccountFrom.AdminAvatar = res.data.newAvatarPath
+        this.newAdminAccountFrom.AdminAvatar = res.data.Filepath
       } else {
         this.$message.error('上传头像失败')
       }
     },
+    // 更新头像
     updateHandleAvatarSuccess (res, file) {
       if (res.code === 0) {
         this.$message.success('上传头像成功')
-        this.updateAdminAccountFrom.AdminAvatar = res.data.newAvatarPath
+        this.updateAdminAccountFrom.AdminAvatar = res.data.Filepath
       } else {
         this.$message.error('上传头像失败')
       }

@@ -21,6 +21,10 @@ const routes = [
     path: '/shop/login',
     component: () => import('../views/shop/login')
   },
+  {
+    path: '/shop/home',
+    component: () => import('../views/shop/home')
+  },
   // 后台管理登陆页面
   {
     path: '/admin/login',

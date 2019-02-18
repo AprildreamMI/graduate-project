@@ -11,6 +11,10 @@ module.exports = function(app){
     客户前台 start
   */
 
+  // 前台登陆
+  app.route('/api/shop/login')
+    .post(MilinBookController.shopLogin)
+
   // 前台注册
   app.route('/api/shop/signIn')
     .post(MilinBookController.shopSignIn)
@@ -73,7 +77,18 @@ module.exports = function(app){
   // 获取书籍列表
   app.route('/api/admin/getBookList')
     .get(MilinBookController.adminGetBookList)
+
+  // 添加书籍
+  app.route('/api/admin/addBookInfo')
+    .post(MilinBookController.adminAddBookInfo)
   
+  // 编辑书籍信息
+  app.route('/api/admin/updateBookInfo')
+    .put(MilinBookController.adminUpdateBookInfo)
+
+  // 编辑书籍信息
+  app.route('/api/admin/updateBookStatus')
+    .put(MilinBookController.adminUpdateBookStatus)
 
   // ==========当前管理员账号管理===========
 

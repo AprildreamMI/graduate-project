@@ -4,6 +4,8 @@ var formidable = require('formidable'); //上传功能的插件
 var fs = require('fs');
 var async = require('async');
 var urlPase = require('url');
+var moment = require('moment')
+
 
 // 用户工具类
 var userUtils = require('../utils/user')
@@ -35,6 +37,72 @@ module.exports = {
   /* 
     客户前台 start
   */
+
+  // 前台登陆
+ shopLogin (req, res, next) {
+  async.waterfall([
+    callback => {
+      let sql = `SELECT * FROM tb_customerinfo WHERE CustomerEmail = '${req.body.username}'`
+      db.query(sql, (err, result) => {
+        if (result.length === 0) {
+          callback(new Error('账号不存在'))
+        } else {
+          callback(err, result[0])
+        }
+      })
+    },
+    (userItem, callback) => {
+      // 密码正确的话 更新登录次数 和 登录时间
+      if (userItem.CustomerPwd === req.body.password) {
+        callback(null, userItem)
+      } else {
+        callback(new Error('密码错误, 请重新输入'))
+      }
+    },
+    (userItem, callback) => {
+      let sql = `UPDATE tb_customerinfo SET CustomerLastLogTime = '${moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')}' WHERE CustomerId = ${userItem.CustomerId}`
+      db.query(sql, (err, result) => {
+        if (result.affectedRows === 1) {
+          callback(err, userItem)
+        } else {
+          callback(new Error('更新登录时间失败，登陆失败'))
+        }
+      })
+    },
+    (userItem, callback) => {
+      let sql = `UPDATE tb_customerinfo SET CustomerLogCount = CustomerLogCount + 1 WHERE CustomerId = ${userItem.CustomerId}`
+      db.query(sql, (err, result) => {
+        if (result.affectedRows === 1) {
+          callback(err, userItem)
+        } else {
+          callback(new Error('更新登录次数失败，登陆失败'))
+        }
+      })
+    },
+    (userItem, callback) => {
+      let sql = `SELECT * FROM tb_customerinfo WHERE CustomerId = ${userItem.CustomerId}`
+      db.query(sql, (err, result) => {
+        callback(err, result[0])
+      })
+    },
+  ], (err, result) => {
+    if (err) {
+      res.status(200).json({
+        data: null,
+        code: -1,
+        message: err.message
+      })
+    } else {
+      res.status(200).json({
+        data: {
+          me: result
+        },
+        code:0,
+        message: "登陆成功"
+      })
+    }
+  })
+ },
 
   // 用户注册
  shopSignIn (req, res, next) {
@@ -282,7 +350,7 @@ module.exports = {
       if (err) {
         res.status(200).json({
           data: err,
-          code: 0,
+          code: -1,
           message: "添加管理员账号失败"
         })
       }
@@ -609,9 +677,9 @@ module.exports = {
         }
         let skip = (pageNum - 1) * req.query.pageSize
         if (!req.query.bookTypeId) {
-          sql = `SELECT * FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%' LIMIT ${skip}, ${req.query.pageSize}`
+          sql = `SELECT * FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%' order by BookId DESC LIMIT ${skip}, ${req.query.pageSize}`
         } else {
-          sql = `SELECT * FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%' AND BookTypeId = ${req.query.bookTypeId} LIMIT ${skip}, ${req.query.pageSize}`
+          sql = `SELECT * FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%' AND BookTypeId = ${req.query.bookTypeId} order by BookId DESC LIMIT ${skip}, ${req.query.pageSize}`
         }
         db.query(sql, (err, result) => {
           callback(err, {
@@ -640,46 +708,212 @@ module.exports = {
     })
   },
 
+  // 添加书籍
+  adminAddBookInfo (req, res, next) {
+    adminUtils.isBooksAdmin(req, res)
+    async.series([
+      callback => {
+        let query_isbn_sql = `SELECT * FROM tb_bookinfo WHERE Bookisbn = '${req.body.Bookisbn}'`
+        db.query(query_isbn_sql, (err, result) => {
+          if (result[0]) {
+            console.log('添加书籍', result[0])
+            callback(new Error('ISBN重复'))
+          } else {
+            callback(err)
+          }
+        })
+      },
+      callback => {
+        let sql = `INSERT INTO tb_bookinfo
+                  (
+                    BookTypeId,
+                    BookName,
+                    BookPress,
+                    BookPubDate,
+                    BookSize,
+                    BookAuthor,
+                    BookTanslor,
+                    Bookisbn,
+                    BookPrice,
+                    BookOutline,
+                    BookMprice,
+                    BookDealmount,
+                    BookDiscount,
+                    BookPic,
+                    BookStoremount,
+                    BookPackstyle
+                  )
+                  VALUES
+                  (
+                     ${req.body.BookTypeId},
+                    '${req.body.BookName}',
+                    '${req.body.BookPress}',
+                    '${moment(req.body.BookPubDate).format('YYYY-MM-DD HH:mm:ss')}',
+                     ${req.body.BookSize},
+                    '${req.body.BookAuthor}',
+                    '${req.body.BookTanslor}',
+                    '${req.body.Bookisbn}',
+                     ${Number(req.body.BookPrice)},
+                    '${req.body.BookOutline}',
+                     ${Number(req.body.BookMprice)},
+                     0,
+                     ${Number(req.body.BookDiscount)},
+                    '${req.body.BookPic}',
+                     ${req.body.BookStoremount},
+                    '${req.body.BookPackstyle}'
+                  )`
+        db.query(sql, (err, result) => {
+          console.log('添加书籍', sql)
+          console.log('添加书籍res', result)
+          // 查看受影响的行数 如果等于 1 
+          if (result.affectedRows === 1) {
+            callback(err, result)
+          } else {
+            callback(new Error('添加书籍信息失败，MySQL影响行数为0'))
+          }
+        })
+      }
+    ], (err, result) => {
+      if (err) {
+        res.status(200).json({
+          data: err,
+          code: -1,
+          message: err.message
+        })
+      } else {
+        res.status(200).json({
+          // 返回新插入的Id
+          data: {
+            insertId: result.insertId
+          },
+          code: 0,
+          message: "添加书籍信息成功"
+        })
+      }
+    })
+  },
+
+  // 编辑书籍
+  adminUpdateBookInfo (req, res, next) {
+    adminUtils.isBooksAdmin(req, res)
+    let sql = `UPDATE tb_bookinfo SET
+                BookTypeId = ${req.body.BookTypeId},
+                BookName = '${req.body.BookName}',
+                BookPress = '${req.body.BookPress}',
+                BookPubDate = '${moment(req.body.BookPubDate).format('YYYY-MM-DD HH:mm:ss')}',
+                BookSize = ${req.body.BookSize},
+                BookAuthor = '${req.body.BookAuthor}',
+                BookTanslor = '${req.body.BookTanslor}',
+                Bookisbn = '${req.body.Bookisbn}',
+                BookPrice = ${Number(req.body.BookPrice)},
+                BookOutline = '${req.body.BookOutline}',
+                BookMprice = ${Number(req.body.BookMprice)},
+                BookDealmount = 0,
+                BookDiscount = ${Number(req.body.BookDiscount)},
+                BookPic = '${req.body.BookPic}',
+                BookStoremount = ${req.body.BookStoremount},
+                BookPackstyle = '${req.body.BookPackstyle}'
+                WHERE BookId = ${req.body.BookId}
+              `
+    db.query(sql, (err, result) => {
+      console.log('编辑书籍xinxi', sql)
+      console.log('编辑书籍result', result.affectedRows)
+      if (err) {
+        res.status(200).json({
+          data: err,
+          code: -1,
+          message: '编辑书籍信息失败'
+        })
+      } else if (result.affectedRows === 1) {
+        res.status(200).json({
+          data: null,
+          code: 0,
+          message: "编辑书籍信息成功"
+        })
+      } else {
+        res.status(200).json({
+          data: err,
+          code: 1,
+          message: '编辑书籍信息失败'
+        })
+      }
+    })
+  },
+
+  // 改变书籍状态 上架或者下架
+  adminUpdateBookStatus (req, res, next) {
+    adminUtils.isBooksAdmin(req, res)
+    let sql = `UPDATE tb_bookinfo SET BookStatus = '${req.body.BookStatus}' WHERE BookId = ${req.body.BookId}`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message: "改变书籍状态失败"
+        });
+      }
+      if (result.affectedRows === 1) {
+        return res.status(200).json({
+          data: null,
+          code: 0,
+          message: "改变书籍状态成功"
+        });
+      } else {
+        return res.status(200).json({
+          data:null,
+          code:1,
+          message: "改变书籍状态失败"
+        });
+      }
+    });
+  },
+
+
+  // ==========公共===========
+
   // 添加管理员账号时 上传头像
   adminUploadAvatar (req, res, next) {
     // 文件上传路径
-    var uploadDir='public/upload/img/adminAvatar/';
-    var form = new formidable.IncomingForm();
+    var form = new formidable.IncomingForm()
     // 新路径
-    let newAvatarPath = ''
+    let Filepath = ''
+    form.uploadDir='public/upload/img/tmp/' 
     // 新名字 要返回给客户端
     //文件的编码格式
     form.encoding = 'utf-8';
-    //文件的上传路径
-    form.uploadDir = uploadDir;
     //文件的后缀名
     form.keepExtensions  = true;
     //文件的大小限制
     form.maxFieldsSize = 2 * 1024 * 1024;
 
     form.parse(req, function (err, fields, files) {
+      // 根据传入的上传文件夹来具体选择上传的所在路径
+      var uploadDir=`public/upload/img/${fields.uploadDir}/`
+      //文件的上传路径
+      form.uploadDir = uploadDir;
+
       if (err) {
         return res.status(200).json({
           data:err,
           code:-1,
-          message:"上传头像失败"
+          message:"上传失败"
         });
       }
 
-      newAvatarPath = form.uploadDir  + files.file.name
+      Filepath = form.uploadDir  + files.file.name
 
       //为上传的文件重命名：其中files.file.path可以获取文件的上传路径
-      fs.renameSync(files.file.path, newAvatarPath)
+      fs.renameSync(files.file.path, Filepath)
     })
 
     //文件上传完成后执行
     form.on("end", function() {
       return res.status(200).json({
         data: {
-          newAvatarPath: newAvatarPath
+          Filepath: Filepath
         },
         code: 0,
-        message: "上传头像成功"
+        message: "上传成功"
       });
     })
   }
