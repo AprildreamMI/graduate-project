@@ -19,6 +19,10 @@ module.exports = function(app){
   app.route('/api/shop/signIn')
     .post(MilinBookController.shopSignIn)
 
+  // 前台注册
+  app.route('/api/shop/getBookList')
+    .get(MilinBookController.shopGetBookList)
+
  
   /* 
     客户前台 end

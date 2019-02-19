@@ -11,7 +11,7 @@
  Target Server Version : 80014
  File Encoding         : 65001
 
- Date: 18/02/2019 19:20:59
+ Date: 19/02/2019 18:55:06
 */
 
 SET NAMES utf8mb4;
@@ -446,7 +446,7 @@ INSERT INTO `tb_bookinfo` VALUES (424, 3, '苏菲的世界（新版）', '作家
 INSERT INTO `tb_bookinfo` VALUES (425, 3, '红楼梦原著版（上、下册）（全两册）（1-9年级必读书单）', '人民文学出版社', '2013-01-01 00:00:00', 32, '曹雪芹', '', '9787020002207', 59.70, '权威版本！收藏经典！  ', 32.80, 257590, 5.50, 'http://img3m1.ddimg.cn/9/22/102771-1_l_2.jpg', 100, '平装-胶订', '1');
 INSERT INTO `tb_bookinfo` VALUES (426, 6, '不可不知的科学', '长江少年儿童出版社', '2017-12-01 00:00:00', 16, '约翰范登', '', '9787556057832', 48.00, '国际畅销科普书作家、4次入围“安万特科学图书奖”——约翰-范登全新作品！与时俱进的科学知识，精致有趣的原理讲解，从小培养科学家气质！（海豚传媒出品） 5万童书 5折封顶 新春伊始 扬帆起航>> ', 24.00, 90713, 5.00, 'http://img3m9.ddimg.cn/42/27/25175049-1_l_3.jpg', 100, '精装', '1');
 INSERT INTO `tb_bookinfo` VALUES (427, 5, '人活到极致，一定是素与简Ⅱ（心灵赋能）', '台海出版社', '2019-01-01 00:00:00', 32, '山口势子', '李玲', '9787516821589', 48.00, '从断舍离到极简主义欧美日韩推崇的断舍离和共享式生活人民日报多家媒体联合盛推，扎克伯格乔布斯爱因斯坦致力践行的生活方式影响数千万中国人内附200多张日本人气博主山口势子亲身实践版精美插图全彩四色印刷！', 33.00, 0, 6.90, 'public/upload/img/bookPic/26436713-1_l_3.jpg', 108, '平装-胶订', '1');
-INSERT INTO `tb_bookinfo` VALUES (428, 5, '不与傻瓜论短长', '现代出版社', '2018-10-01 00:00:00', 32, '老杨的猫头鹰', '', '9787514373042', 39.00, '别和坏人比坏，坏是没有下限的；别和傻瓜比傻，傻是会传染的。做一个赏心悦目的人，嘴巴干净、良心清白。22个故事，送给不够圆滑也不够世故的你。专治戏精、杠精、话题终结者。不负责疼爱你，只想要唤醒你', 19.00, 0, 5.00, 'http://localhost:3000/public/upload/img/bookPic/26436713-1_l_3.jpg', 105, '平装-胶订', '1');
+INSERT INTO `tb_bookinfo` VALUES (428, 5, '不与傻瓜论短长', '现代出版社', '2018-10-01 00:00:00', 32, '老杨的猫头鹰', '', '9787514373042', 39.00, '别和坏人比坏，坏是没有下限的；别和傻瓜比傻，傻是会传染的。做一个赏心悦目的人，嘴巴干净、良心清白。22个故事，送给不够圆滑也不够世故的你。专治戏精、杠精、话题终结者。不负责疼爱你，只想要唤醒你', 19.00, 0, 5.00, 'http://localhost:3000/public/upload/img/bookPic/26436713-1_l_3.jpg', 105, '平装-胶订', '0');
 
 -- ----------------------------
 -- Table structure for tb_booktypeinfo
@@ -536,7 +536,7 @@ CREATE TABLE `tb_customerinfo`  (
 -- ----------------------------
 -- Records of tb_customerinfo
 -- ----------------------------
-INSERT INTO `tb_customerinfo` VALUES (1, '死者的代言人', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278540', '1159902844@qq.com', '武汉', '2019-02-16 17:04:58', 3, '2019-02-18 19:20:12', NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (1, '死者的代言人', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278540', '1159902844@qq.com', '武汉', '2019-02-16 17:04:58', 4, '2019-02-19 09:08:34', NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 INSERT INTO `tb_customerinfo` VALUES (2, '死者的代言人2', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278541', '1159902544@qq.com', '武汉', '2019-02-16 17:06:27', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '0');
 INSERT INTO `tb_customerinfo` VALUES (3, '安德的游戏', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '安德', '1', '17566458892', 'andedeyouxi@qq.com', '虫巢', '2019-02-16 17:12:54', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 INSERT INTO `tb_customerinfo` VALUES (4, '我不是许三观', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '许三观', '1', '17388902245', 'xusanguan@qq.com', '不详', '2019-02-16 17:14:20', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');

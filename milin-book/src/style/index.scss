@@ -150,3 +150,9 @@ body {
     }
   }
 }
+
+.hover-red {
+  &:hover {
+    color: $danger-color;
+  }
+}

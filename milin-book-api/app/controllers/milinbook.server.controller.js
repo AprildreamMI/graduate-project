@@ -39,178 +39,239 @@ module.exports = {
   */
 
   // 前台登陆
- shopLogin (req, res, next) {
-  async.waterfall([
-    callback => {
-      let sql = `SELECT * FROM tb_customerinfo WHERE CustomerEmail = '${req.body.username}'`
-      db.query(sql, (err, result) => {
-        if (result.length === 0) {
-          callback(new Error('账号不存在'))
+  shopLogin (req, res, next) {
+    async.waterfall([
+      callback => {
+        let sql = `SELECT * FROM tb_customerinfo WHERE CustomerEmail = '${req.body.username}'`
+        db.query(sql, (err, result) => {
+          if (result.length === 0) {
+            callback(new Error('账号不存在'))
+          } else {
+            callback(err, result[0])
+          }
+        })
+      },
+      (userItem, callback) => {
+        // 密码正确的话 更新登录次数 和 登录时间
+        if (userItem.CustomerPwd === req.body.password) {
+          callback(null, userItem)
         } else {
+          callback(new Error('密码错误, 请重新输入'))
+        }
+      },
+      (userItem, callback) => {
+        let sql = `UPDATE tb_customerinfo SET CustomerLastLogTime = '${moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')}' WHERE CustomerId = ${userItem.CustomerId}`
+        db.query(sql, (err, result) => {
+          if (result.affectedRows === 1) {
+            callback(err, userItem)
+          } else {
+            callback(new Error('更新登录时间失败，登陆失败'))
+          }
+        })
+      },
+      (userItem, callback) => {
+        let sql = `UPDATE tb_customerinfo SET CustomerLogCount = CustomerLogCount + 1 WHERE CustomerId = ${userItem.CustomerId}`
+        db.query(sql, (err, result) => {
+          if (result.affectedRows === 1) {
+            callback(err, userItem)
+          } else {
+            callback(new Error('更新登录次数失败，登陆失败'))
+          }
+        })
+      },
+      (userItem, callback) => {
+        let sql = `SELECT * FROM tb_customerinfo WHERE CustomerId = ${userItem.CustomerId}`
+        db.query(sql, (err, result) => {
           callback(err, result[0])
-        }
-      })
-    },
-    (userItem, callback) => {
-      // 密码正确的话 更新登录次数 和 登录时间
-      if (userItem.CustomerPwd === req.body.password) {
-        callback(null, userItem)
+        })
+      },
+    ], (err, result) => {
+      if (err) {
+        res.status(200).json({
+          data: null,
+          code: -1,
+          message: err.message
+        })
       } else {
-        callback(new Error('密码错误, 请重新输入'))
+        res.status(200).json({
+          data: {
+            me: result
+          },
+          code:0,
+          message: "登陆成功"
+        })
       }
-    },
-    (userItem, callback) => {
-      let sql = `UPDATE tb_customerinfo SET CustomerLastLogTime = '${moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')}' WHERE CustomerId = ${userItem.CustomerId}`
-      db.query(sql, (err, result) => {
-        if (result.affectedRows === 1) {
-          callback(err, userItem)
-        } else {
-          callback(new Error('更新登录时间失败，登陆失败'))
-        }
-      })
-    },
-    (userItem, callback) => {
-      let sql = `UPDATE tb_customerinfo SET CustomerLogCount = CustomerLogCount + 1 WHERE CustomerId = ${userItem.CustomerId}`
-      db.query(sql, (err, result) => {
-        if (result.affectedRows === 1) {
-          callback(err, userItem)
-        } else {
-          callback(new Error('更新登录次数失败，登陆失败'))
-        }
-      })
-    },
-    (userItem, callback) => {
-      let sql = `SELECT * FROM tb_customerinfo WHERE CustomerId = ${userItem.CustomerId}`
-      db.query(sql, (err, result) => {
-        callback(err, result[0])
-      })
-    },
-  ], (err, result) => {
-    if (err) {
-      res.status(200).json({
-        data: null,
-        code: -1,
-        message: err.message
-      })
-    } else {
-      res.status(200).json({
-        data: {
-          me: result
-        },
-        code:0,
-        message: "登陆成功"
-      })
-    }
-  })
- },
+    })
+  },
 
   // 用户注册
- shopSignIn (req, res, next) {
-  console.log('req.body注册', req.body)
-  async.series([
-    callback => {
-      let query_name_sql = `SELECT * FROM tb_customerinfo WHERE CustomerName = '${req.body.customerName}'`
-      db.query(query_name_sql, (err, result) => {
-        if (result[0]) {
-          return res.status(200).json({
+  shopSignIn (req, res, next) {
+    console.log('req.body注册', req.body)
+    async.series([
+      callback => {
+        let query_name_sql = `SELECT * FROM tb_customerinfo WHERE CustomerName = '${req.body.customerName}'`
+        db.query(query_name_sql, (err, result) => {
+          if (result[0]) {
+            return res.status(200).json({
+                data: null,
+                code: 1,
+                message:"昵称重复, 注册失败"
+            }); 
+          } else {
+            callback(err)
+          }
+        })
+      },
+      callback => {
+        let query_account_sql = `SELECT * FROM tb_customerinfo WHERE CustomerEmail = '${req.body.customerEmail}'`
+        db.query(query_account_sql, (err, result) => {
+          if (result[0]) {
+            return res.status(200).json({
+                data: null,
+                code: 1,
+                message:"邮箱重复, 注册失败"
+            }); 
+          } else {
+            callback(err)
+          }
+        })
+      },
+      callback => {
+        let query_tel_sql = `SELECT * FROM tb_customerinfo WHERE CustomerTel = '${req.body.customerTel}'`
+        db.query(query_tel_sql, (err, result) => {
+          if (result[0]) {
+            return res.status(200).json({
+                data: null,
+                code: 1,
+                message:"手机号重复, 注册失败"
+            }); 
+          } else {
+            callback(err)
+          }
+        })
+      },
+      callback => {
+        let sql = `INSERT INTO tb_customerinfo
+                  (
+                    CustomerName,
+                    CustomerEmail,
+                    CustomerTrueName,
+                    CustomerSex,
+                    CustomerTel,
+                    CustomerAddr,
+                    CustomerPwd,
+                    CustomerAvatar,
+                    CustomerRegTime,
+                    CustomerLogCount
+                  )
+                  VALUES
+                  (
+                    '${req.body.customerName}',
+                    '${req.body.customerEmail}',
+                    '${req.body.customerTrueName}',
+                    '${req.body.customerSex}',
+                    '${req.body.customerTel}',
+                    '${req.body.customerAddr}',
+                    '${req.body.customerPwd}',
+                    '${req.body.customerAvatar}',
+                    '${adminUtils.getNowFormatDate()}',
+                    ${0}
+                  )`
+        db.query(sql, (err, result) => {
+          console.log('err注册',err)
+          console.log('result注册', result, sql)
+          // 查看受影响的行数 如果等于 1 
+          if (result.affectedRows === 1) {
+            callback(err)
+          } else {
+            res.status(200).json({
               data: null,
               code: 1,
-              message:"昵称重复, 注册失败"
-          }); 
+              message: "注册账号失败"
+            })
+          }
+        })
+      }
+    ], (err, result) => {
+      if (err) {
+        res.status(200).json({
+          data: err,
+          code: 1,
+          message: "注册账号失败"
+        })
+      } else {
+        res.status(200).json({
+          // 返回新插入的Id
+          data: {
+            insertId: result.insertId
+          },
+          code: 0,
+          message: "注册账号成功"
+        })
+      }
+    })
+  },
+
+  shopGetBookList (req, res, next) {
+    async.waterfall([
+      callback => {
+        let sql = ''
+        console.log('获取书籍req', req.query.bookTypeId)
+        if (!Number(req.query.bookTypeId)) {
+          sql = `SELECT count(*) AS total FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%' AND BookStatus = '1'`
         } else {
-          callback(err)
+          sql = `SELECT count(*) AS total FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%' AND BookTypeId = ${req.query.bookTypeId} AND BookStatus = '1'`
         }
-      })
-    },
-    callback => {
-      let query_account_sql = `SELECT * FROM tb_customerinfo WHERE CustomerEmail = '${req.body.customerEmail}'`
-      db.query(query_account_sql, (err, result) => {
-        if (result[0]) {
-          return res.status(200).json({
-              data: null,
-              code: 1,
-              message:"邮箱重复, 注册失败"
-          }); 
-        } else {
-          callback(err)
-        }
-      })
-    },
-    callback => {
-      let query_tel_sql = `SELECT * FROM tb_customerinfo WHERE CustomerTel = '${req.body.customerTel}'`
-      db.query(query_tel_sql, (err, result) => {
-        if (result[0]) {
-          return res.status(200).json({
-              data: null,
-              code: 1,
-              message:"手机号重复, 注册失败"
-          }); 
-        } else {
-          callback(err)
-        }
-      })
-    },
-    callback => {
-      let sql = `INSERT INTO tb_customerinfo
-                (
-                  CustomerName,
-                  CustomerEmail,
-                  CustomerTrueName,
-                  CustomerSex,
-                  CustomerTel,
-                  CustomerAddr,
-                  CustomerPwd,
-                  CustomerAvatar,
-                  CustomerRegTime,
-                  CustomerLogCount
-                )
-                VALUES
-                (
-                  '${req.body.customerName}',
-                  '${req.body.customerEmail}',
-                  '${req.body.customerTrueName}',
-                  '${req.body.customerSex}',
-                  '${req.body.customerTel}',
-                  '${req.body.customerAddr}',
-                  '${req.body.customerPwd}',
-                  '${req.body.customerAvatar}',
-                  '${adminUtils.getNowFormatDate()}',
-                  ${0}
-                )`
-      db.query(sql, (err, result) => {
-        console.log('err注册',err)
-        console.log('result注册', result, sql)
-        // 查看受影响的行数 如果等于 1 
-        if (result.affectedRows === 1) {
-          callback(err)
-        } else {
-          res.status(200).json({
-            data: null,
-            code: 1,
-            message: "注册账号失败"
+        console.log('获取书籍SQL', sql)
+        db.query(sql, (err, result) => {
+          callback(err, result[0].total)
+        })
+      },
+      (total, callback) => {
+        if (total <= 0) {
+          callback(null, {
+            result: [],
+            total: 0
           })
+          return
         }
-      })
-    }
-  ], (err, result) => {
-    if (err) {
-      res.status(200).json({
-        data: err,
-        code: 1,
-        message: "注册账号失败"
-      })
-    } else {
-      res.status(200).json({
-        // 返回新插入的Id
-        data: {
-          insertId: result.insertId
-        },
-        code: 0,
-        message: "注册账号成功"
-      })
-    }
-  })
- },
+        let sql = ''
+        let pageNum = req.query.pageNum
+        if (pageNum > total) {
+          pageNum = total
+        }
+        let skip = (pageNum - 1) * req.query.pageSize
+        if (!Number(req.query.bookTypeId)) {
+          sql = `SELECT * FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%' AND BookStatus = '1' order by BookId DESC LIMIT ${skip}, ${req.query.pageSize}`
+        } else {
+          sql = `SELECT * FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%' AND BookTypeId = ${req.query.bookTypeId} AND BookStatus = '1' order by BookId DESC LIMIT ${skip}, ${req.query.pageSize}`
+        }
+        db.query(sql, (err, result) => {
+          callback(err, {
+            result: result,
+            total: total
+          })
+        })
+      }
+    ], function(err, results) {
+      if (err) {
+        res.status(200).json({
+          data:err,
+          code:-1,
+          message: "获取图书列表失败"
+        });
+      } else {
+        res.status(200).json({
+          data: {
+            bookList: results.result,
+            total: results.total
+          },
+          code: 0,
+          message: "获取图书列表成功"
+        })
+      }
+    })
+  },
 
   /* 
     客户前台 end
@@ -625,7 +686,6 @@ module.exports = {
 
   // 获取书籍类型
   adminGetBookTypeList (req, res, next) {
-    adminUtils.isBooksAdmin(req, res)
     let sql = `SELECT BookTypeId AS value, BookTypeName AS label FROM tb_booktypeinfo`
     db.query(sql, (err, result) => {
       if (err) {
@@ -649,15 +709,16 @@ module.exports = {
   // 获取书籍列表 传入 搜索条件 书的类型 页码 每页的条目数
   adminGetBookList (req, res, next) {
     adminUtils.isBooksAdmin(req, res)
-    console.log()
     async.waterfall([
       callback => {
         let sql = ''
-        if (!req.query.bookTypeId) {
+        console.log('获取书籍req', req.query.bookTypeId)
+        if (!Number(req.query.bookTypeId)) {
           sql = `SELECT count(*) AS total FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%'`
         } else {
           sql = `SELECT count(*) AS total FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%' AND BookTypeId = ${req.query.bookTypeId}`
         }
+        console.log('获取书籍SQL', sql)
         db.query(sql, (err, result) => {
           callback(err, result[0].total)
         })
@@ -676,7 +737,7 @@ module.exports = {
           pageNum = total
         }
         let skip = (pageNum - 1) * req.query.pageSize
-        if (!req.query.bookTypeId) {
+        if (!Number(req.query.bookTypeId)) {
           sql = `SELECT * FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%' order by BookId DESC LIMIT ${skip}, ${req.query.pageSize}`
         } else {
           sql = `SELECT * FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%' AND BookTypeId = ${req.query.bookTypeId} order by BookId DESC LIMIT ${skip}, ${req.query.pageSize}`

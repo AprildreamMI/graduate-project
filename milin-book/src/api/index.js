@@ -24,6 +24,9 @@ export const shopLogin = (data) => post('/shop/login', data)
 // 前台注册
 export const shopSignIn = (data) => post('/shop/signIn', data)
 
+// 前台注册
+export const shopGetBookList = (data) => get('/shop/getBookList', data)
+
 /*
   客户前台 end
 */

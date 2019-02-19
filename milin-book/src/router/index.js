@@ -144,4 +144,6 @@ router.afterEach((to, from) => {
   bar.finish()
 })
 
+console.log('\n ' + '%c 密林的书店 ' + '%c Verison 1.0 ' + '%c Github ' + '%c https://github.com/AprildreamMI/graduate-project\t ' + '%c 赵思 ' + '%c 简单的毕业设计 \n\n', 'color: #f1f1f1; background: #000000; padding:5px 0;', 'background: #65E0DD; padding:5px;', 'color: #555555; background: #F6B897; padding:5px; margin-left:15px;', 'background: #DD5F89; padding:5px;', 'background: #EA4335; padding:5px;margin-left:15px;', 'color: white; background: #4285F4; padding:5px 0; margin-top: 10px;')
+
 export default router

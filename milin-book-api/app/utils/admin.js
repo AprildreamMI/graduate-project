@@ -27,6 +27,7 @@ module.exports = {
    * @param {*} res 
    */
   isBooksAdmin (req, res) {
+    console.log('req.cookies', req)
     if (!req.cookies.admin_me) {
       res.writeHead(200, {'Content-Type': 'text/html'});
       res.write('<head><meta charset="utf-8"/></head>');
