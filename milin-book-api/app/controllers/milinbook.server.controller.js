@@ -6,15 +6,13 @@ var async = require('async');
 var urlPase = require('url');
 var moment = require('moment')
 
-
 // 用户工具类
 var userUtils = require('../utils/user')
 // 管理员工具类
 var adminUtils = require('../utils/admin')
 
 module.exports = {
-
-    // 测试数据
+  // 测试数据
   getAll: function(req, res, next){
     var  sql = 'SELECT * FROM test';
     db.query(sql,function (err,result) {
@@ -212,6 +210,7 @@ module.exports = {
     })
   },
 
+  // 获取图书列表
   shopGetBookList (req, res, next) {
     async.waterfall([
       callback => {
@@ -271,6 +270,84 @@ module.exports = {
         })
       }
     })
+  },
+
+  // 添加书籍到购物车
+  shopAddShopCar (req, res, next) {
+    // 判断用户是否登陆
+    userUtils.isUserLogin(req, res)
+    let sql = `INSERT INTO tb_shopbook
+              (
+                CustomerId,
+                BookId,
+                ordermount,
+                goodsStatus,
+                address
+              )
+              VALUE
+              (
+                ${req.body.CustomerId},
+                ${req.body.BookId},
+                ${req.body.ordermount},
+                '${req.body.goodsStatus}',
+                '${req.body.address}'
+              )`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message: "添加到购物车失败"
+        });
+      }
+      if (result.affectedRows === 1) {
+        return res.status(200).json({
+          data: null,
+          code: 0,
+          message: "添加到购物车成功"
+        });
+      } else {
+        return res.status(200).json({
+          data:null,
+          code:1,
+          message: "添加到购物车失败"
+        });
+      }
+    });
+  },
+
+  // 获取当前账户的购物车中的数量
+  shopGetShopCarCount (req, res, next) {
+    // 判断用户是否登陆
+    userUtils.isUserLogin(req, res)
+    // 当前us噢登录用户的id
+    console.log(JSON.parse(req.cookies.user_me).CustomerId)
+    let userId = JSON.parse(req.cookies.user_me).CustomerId
+    let sql = `SELECT COUNT(*) AS shopCarCount FROM tb_shopbook where CustomerId = ${userId}`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message: "获取到购物车数量失败"
+        });
+      }
+      if (result.length === 1) {
+        return res.status(200).json({
+          data: {
+            shopCarCount: result[0].shopCarCount
+          },
+          code: 0,
+          message: "获取到购物车数量成功"
+        });
+      } else {
+        return res.status(200).json({
+          data:null,
+          code:1,
+          message: "获取到购物车数量失败"
+        });
+      }
+    });
   },
 
   /* 

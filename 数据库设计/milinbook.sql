@@ -11,7 +11,7 @@
  Target Server Version : 80014
  File Encoding         : 65001
 
- Date: 19/02/2019 18:55:06
+ Date: 20/02/2019 18:06:00
 */
 
 SET NAMES utf8mb4;
@@ -536,7 +536,7 @@ CREATE TABLE `tb_customerinfo`  (
 -- ----------------------------
 -- Records of tb_customerinfo
 -- ----------------------------
-INSERT INTO `tb_customerinfo` VALUES (1, '死者的代言人', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278540', '1159902844@qq.com', '武汉', '2019-02-16 17:04:58', 4, '2019-02-19 09:08:34', NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (1, '死者的代言人', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278540', '1159902844@qq.com', '武汉', '2019-02-16 17:04:58', 5, '2019-02-20 09:10:40', NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 INSERT INTO `tb_customerinfo` VALUES (2, '死者的代言人2', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278541', '1159902544@qq.com', '武汉', '2019-02-16 17:06:27', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '0');
 INSERT INTO `tb_customerinfo` VALUES (3, '安德的游戏', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '安德', '1', '17566458892', 'andedeyouxi@qq.com', '虫巢', '2019-02-16 17:12:54', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 INSERT INTO `tb_customerinfo` VALUES (4, '我不是许三观', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '许三观', '1', '17388902245', 'xusanguan@qq.com', '不详', '2019-02-16 17:14:20', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
@@ -588,21 +588,21 @@ CREATE TABLE `tb_order`  (
   `CustomerId` int(11) NOT NULL COMMENT '客户编号',
   `BookId` int(11) NOT NULL COMMENT '图书编号\r\n\r\n',
   `ordermount` int(11) NOT NULL COMMENT '订购数量',
-  `Orderdate` datetime(0) NOT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '下单日期',
+  `Orderdate` datetime(0) NOT NULL COMMENT '下单日期',
   `isPlay` enum('1','0') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' COMMENT '支付状态\r\n1、以支付\r\n2、未支付',
   `paymethod` enum('1','2','3') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '支付方式\r\n1、支付宝\r\n2、微信支付\r\n3、银行卡支付',
-  `payTime` datetime(0) NOT NULL COMMENT '支付时间',
+  `payTime` datetime(0) NULL DEFAULT NULL COMMENT '支付时间',
   `message` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '留言',
-  `receverId` int(11) NOT NULL COMMENT '收货地址id',
+  `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '收货地址',
   `totalprice` decimal(10, 2) UNSIGNED NOT NULL COMMENT '总卖出价',
-  `isShip` enum('1','0') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' COMMENT '是否发货',
+  `isShip` enum('1','0') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' COMMENT '是否发货1、发货 0、未发货',
   `shipTime` datetime(0) NOT NULL COMMENT '发货时间',
-  `isReceipt` enum('1','0') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '是否收货',
-  `receiptDate` datetime(0) NOT NULL COMMENT '收货时间',
-  `goodsStatus` enum('1','0','-1') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '商品状态\r\n1、正常\r\n0、禁用\r\n-1、删除',
+  `isReceipt` enum('1','0') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' COMMENT '是否收货1、收货 0、未收货',
+  `receiptDate` datetime(0) NULL DEFAULT NULL COMMENT '收货时间',
   PRIMARY KEY (`id`, `OrderId`) USING BTREE,
   INDEX `CustomerId_O_F`(`CustomerId`) USING BTREE,
   INDEX `BookId_O_F`(`BookId`) USING BTREE,
+  UNIQUE INDEX `OrderId_OF`(`OrderId`) USING BTREE COMMENT '订单编号的唯一性',
   CONSTRAINT `BookId_O_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `CustomerId_O_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
@@ -635,13 +635,20 @@ CREATE TABLE `tb_shopbook`  (
   `CustomerId` int(11) NOT NULL COMMENT '购物车的客户编号',
   `BookId` int(11) NOT NULL COMMENT '图书编号\r\n\r\n',
   `ordermount` int(11) NOT NULL COMMENT '订购数量',
-  `goodsStatus` enum('1','0','-1') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '商品在购物车中的状态\r\n1、正常显示\r\n2、禁用\r\n3、删除（以支付购买）',
+  `goodsStatus` enum('1','0','-1') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '商品在购物车中的状态\r\n1、正常显示\r\n0、禁用\r\n-1、删除（以支付购买）',
+  `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '收货地址',
   PRIMARY KEY (`shopCarId`) USING BTREE,
   INDEX `CustomerId_F`(`CustomerId`) USING BTREE,
   INDEX `BookId_F`(`BookId`) USING BTREE,
   CONSTRAINT `BookId_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `CustomerId_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tb_shopbook
+-- ----------------------------
+INSERT INTO `tb_shopbook` VALUES (4, 1, 416, 1, '1', '山西省长治市襄垣县');
+INSERT INTO `tb_shopbook` VALUES (5, 1, 420, 1, '1', '山西省长治市襄垣县');
 
 -- ----------------------------
 -- Table structure for tb_useraddress

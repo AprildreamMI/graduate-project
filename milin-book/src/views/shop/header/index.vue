@@ -41,7 +41,7 @@
             <i class="iconfont icon-vertical_line"></i>
             <div class="shop-car hover-red" >
               <i class="iconfont icon-htmal5icon29"></i>
-              <el-badge :value="14" type="warning" class="item">
+              <el-badge :value="shopCarCount" type="warning" class="item">
                 <p class="hover-red">我的购物车</p>
               </el-badge>
             </div>
@@ -63,12 +63,31 @@
     </div>
 </template>
 <script>
-// import * as api from '../../api'
+import * as api from '../../../api'
 import cookie from '../../../utils/cookie.js'
 export default {
   data () {
     return {
 
+    }
+  },
+  created () {
+    this.getShopCarCount()
+  },
+  methods: {
+    // 获取当前账户购物车中的数量
+    getShopCarCount () {
+      api.shopGetShopCarCount(this.shopCar).then(res => {
+        if (res.data.code === 0) {
+          console.log(res.data)
+          this.$store.commit('setShopCarCount', res.data.data.shopCarCount)
+          // this.$message.success(res.data.message)
+        } else {
+          // this.$message.error(res.data.message)
+        }
+      }).catch(error => {
+        console.error(error)
+      })
     }
   },
   computed: {
@@ -77,6 +96,10 @@ export default {
         return JSON.parse(cookie.get('user_me'))
       }
       return {}
+    },
+    // 购物车中的胡亮
+    shopCarCount () {
+      return this.$store.state.shopCarCount
     }
   }
 }

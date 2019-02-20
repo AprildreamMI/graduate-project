@@ -23,6 +23,14 @@ module.exports = function(app){
   app.route('/api/shop/getBookList')
     .get(MilinBookController.shopGetBookList)
 
+  // 加入购物车
+  app.route('/api/shop/addShopCar')
+    .post(MilinBookController.shopAddShopCar)
+
+  // 获取购物车中数量
+  app.route('/api/shop/getShopCarCount')
+    .get(MilinBookController.shopGetShopCarCount)
+
  
   /* 
     客户前台 end

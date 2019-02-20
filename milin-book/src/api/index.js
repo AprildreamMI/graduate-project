@@ -24,8 +24,14 @@ export const shopLogin = (data) => post('/shop/login', data)
 // 前台注册
 export const shopSignIn = (data) => post('/shop/signIn', data)
 
-// 前台注册
+// 获取图书列表
 export const shopGetBookList = (data) => get('/shop/getBookList', data)
+
+// 添加到购物车
+export const shopAddShopCar = (data) => post('/shop/addShopCar', data)
+
+// 添加到购物车
+export const shopGetShopCarCount = () => get('/shop/getShopCarCount')
 
 /*
   客户前台 end

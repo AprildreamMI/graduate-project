@@ -8,7 +8,10 @@ Vue.use(Vuex)
 
 const state = {
   // 个人信息
-  me: sessionStorage.getItem('currUserInfo') ? JSON.parse(sessionStorage.getItem('currUserInfo')) : null
+  me: sessionStorage.getItem('currUserInfo') ? JSON.parse(sessionStorage.getItem('currUserInfo')) : null,
+
+  // 购物车中的数量
+  shopCarCount: 0
 }
 
 const options = {

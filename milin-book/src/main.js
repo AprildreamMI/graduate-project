@@ -9,6 +9,8 @@ import './element-ui'
 
 // 全局组件
 import './utils/component'
+// 全局过滤器
+import './utils/filter'
 
 Vue.config.productionTip = false
 
