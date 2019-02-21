@@ -31,6 +31,18 @@ module.exports = function(app){
   app.route('/api/shop/getShopCarCount')
     .get(MilinBookController.shopGetShopCarCount)
 
+  // 获取订单数量
+  app.route('/api/shop/getOrderCount')
+    .get(MilinBookController.shopGetOrderCount)
+
+  // 添加订单 状态为未付款
+  app.route('/api/shop/addOrder')
+    .post(MilinBookController.shopAddOrder)
+
+  // 添加订单 状态为未付款
+  app.route('/api/shop/getUserShopCarGoods')
+    .get(MilinBookController.shopGetUserShopCarGoods)
+
  
   /* 
     客户前台 end

@@ -30,8 +30,17 @@ export const shopGetBookList = (data) => get('/shop/getBookList', data)
 // 添加到购物车
 export const shopAddShopCar = (data) => post('/shop/addShopCar', data)
 
-// 添加到购物车
+// 获取购物车中的数量
 export const shopGetShopCarCount = () => get('/shop/getShopCarCount')
+
+// 获取订单中的数量
+export const shopGetOrderCount = () => get('/shop/getOrderCount')
+
+// 添加订单 状态为未付款
+export const shopAddOrder = (data) => post('/shop/addOrder', data)
+
+// 获取当前登录用户在购物车中的商品列表
+export const shopGetUserShopCarGoods = () => get('/shop/getUserShopCarGoods')
 
 /*
   客户前台 end

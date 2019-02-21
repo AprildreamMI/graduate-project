@@ -11,6 +11,8 @@ import './element-ui'
 import './utils/component'
 // 全局过滤器
 import './utils/filter'
+// 工具类
+import './utils/index'
 
 Vue.config.productionTip = false
 

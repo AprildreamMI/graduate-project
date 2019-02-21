@@ -5,7 +5,7 @@
           <div class="shop-header-content-left">
             <div class="shop-header-content-left-home">
               <i class="iconfont icon-shouyeshouye"></i>
-              <p class="text-14-R">密林的书店首页</p>
+              <p class="text-14-R" @click="pushHome">密林的书店首页</p>
             </div>
           </div>
           <div v-if="user_me" class="shop-header-content-right">
@@ -28,42 +28,44 @@
                     <el-col :span="11">
                       <div class="right-handel">
                         <el-button plain type="primary" size="mini">编辑信息</el-button>
-                        <el-button plain type="danger" size="mini">注销登陆</el-button>
+                        <el-button plain type="danger" @click="logout" size="mini">注销登陆</el-button>
                       </div>
                     </el-col>
                   </el-row>
                 </div>
               </el-popover>
               <div v-popover:popover_userName class="user-name hover-red">
-                {{ user_me.CustomerName }}
+                <i class="iconfont icon-yonghu1"></i>
+                <p>{{ user_me.CustomerName }}</p>
               </div>
             </div>
             <i class="iconfont icon-vertical_line"></i>
             <div class="shop-car hover-red" >
-              <i class="iconfont icon-htmal5icon29"></i>
+              <i class="iconfont icon-gouwuche"></i>
               <el-badge :value="shopCarCount" type="warning" class="item">
-                <p class="hover-red">我的购物车</p>
+                <p class="hover-red" @click="pushShopCar">我的购物车</p>
               </el-badge>
             </div>
             <i class="iconfont icon-vertical_line"></i>
             <div class="order hover-red">
               <i class="iconfont icon-dingdan"></i>
-              <el-badge :value="8" class="item">
+              <el-badge :value="orderCount" class="item">
                 <p class="hover-red">我的订单</p>
               </el-badge>
             </div>
           </div>
           <div v-else  class="shop-header-content-right">
             <p class="login-p">您好，欢迎光临密林，请
-              <span class="login-span">登陆</span>
+              <span @click="login" class="login-span">登陆</span>
             </p>
+            <i style="margin-right: 5px;" class="iconfont icon-yonghu1"></i>
           </div>
         </div>
       </div>
     </div>
 </template>
 <script>
-import * as api from '../../../api'
+// import * as api from '../../../api'
 import cookie from '../../../utils/cookie.js'
 export default {
   data () {
@@ -72,22 +74,47 @@ export default {
     }
   },
   created () {
+    // 获取购物车数量
     this.getShopCarCount()
+    // 获取订单数量
+    this.getOrderCount()
   },
   methods: {
     // 获取当前账户购物车中的数量
     getShopCarCount () {
-      api.shopGetShopCarCount(this.shopCar).then(res => {
-        if (res.data.code === 0) {
-          console.log(res.data)
-          this.$store.commit('setShopCarCount', res.data.data.shopCarCount)
-          // this.$message.success(res.data.message)
-        } else {
-          // this.$message.error(res.data.message)
-        }
-      }).catch(error => {
-        console.error(error)
+      this.$store.commit('setShopCarCount')
+    },
+    // 获取当前账户的订单数量
+    getOrderCount () {
+      this.$store.commit('setOrderCount')
+    },
+    // 退出登陆 注销
+    logout () {
+      this.$confirm('确定退出?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        cookie.remove('user_me')
+        this.$router.push('/shop/login')
+        this.$message({
+          type: 'info',
+          message: '已取消退出'
+        })
+      }).catch(() => {
       })
+    },
+    // 点击登陆 跳转到登陆页面
+    login () {
+      this.$router.push('/shop/login')
+    },
+    // 跳转到购物车
+    pushShopCar () {
+      this.$router.push('/shop/shopCar')
+    },
+    // 跳转到首页
+    pushHome () {
+      this.$router.push('/shop/home')
     }
   },
   computed: {
@@ -95,11 +122,15 @@ export default {
       if (cookie.get('user_me')) {
         return JSON.parse(cookie.get('user_me'))
       }
-      return {}
+      return ''
     },
     // 购物车中的胡亮
     shopCarCount () {
       return this.$store.state.shopCarCount
+    },
+    // 订单中的数量
+    orderCount () {
+      return this.$store.state.orderCount
     }
   }
 }
@@ -153,6 +184,11 @@ export default {
             justify-content: center;
             align-items: center;
             height: 100%;
+            i {
+              font-size: 20px;
+              color: $danger-color;
+              margin-right: 5px;
+            }
           }
         }
         .shop-car {
@@ -161,6 +197,7 @@ export default {
           align-items: center;
           margin-right: 10px;
           i {
+            font-size: 18px;
             color: $danger-color;
             margin-right: 5px;
           }

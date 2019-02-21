@@ -11,7 +11,9 @@ const state = {
   me: sessionStorage.getItem('currUserInfo') ? JSON.parse(sessionStorage.getItem('currUserInfo')) : null,
 
   // 购物车中的数量
-  shopCarCount: 0
+  shopCarCount: 0,
+  // 订单中的数量
+  orderCount: 0
 }
 
 const options = {

@@ -11,7 +11,7 @@
  Target Server Version : 80014
  File Encoding         : 65001
 
- Date: 20/02/2019 18:06:00
+ Date: 21/02/2019 18:24:11
 */
 
 SET NAMES utf8mb4;
@@ -536,7 +536,7 @@ CREATE TABLE `tb_customerinfo`  (
 -- ----------------------------
 -- Records of tb_customerinfo
 -- ----------------------------
-INSERT INTO `tb_customerinfo` VALUES (1, '死者的代言人', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278540', '1159902844@qq.com', '武汉', '2019-02-16 17:04:58', 5, '2019-02-20 09:10:40', NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (1, '死者的代言人', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278540', '1159902844@qq.com', '武汉', '2019-02-16 17:04:58', 7, '2019-02-21 14:46:40', NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 INSERT INTO `tb_customerinfo` VALUES (2, '死者的代言人2', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278541', '1159902544@qq.com', '武汉', '2019-02-16 17:06:27', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '0');
 INSERT INTO `tb_customerinfo` VALUES (3, '安德的游戏', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '安德', '1', '17566458892', 'andedeyouxi@qq.com', '虫巢', '2019-02-16 17:12:54', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 INSERT INTO `tb_customerinfo` VALUES (4, '我不是许三观', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '许三观', '1', '17388902245', 'xusanguan@qq.com', '不详', '2019-02-16 17:14:20', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
@@ -596,16 +596,30 @@ CREATE TABLE `tb_order`  (
   `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '收货地址',
   `totalprice` decimal(10, 2) UNSIGNED NOT NULL COMMENT '总卖出价',
   `isShip` enum('1','0') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' COMMENT '是否发货1、发货 0、未发货',
-  `shipTime` datetime(0) NOT NULL COMMENT '发货时间',
+  `shipTime` datetime(0) NULL DEFAULT NULL COMMENT '发货时间',
   `isReceipt` enum('1','0') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' COMMENT '是否收货1、收货 0、未收货',
   `receiptDate` datetime(0) NULL DEFAULT NULL COMMENT '收货时间',
   PRIMARY KEY (`id`, `OrderId`) USING BTREE,
+  UNIQUE INDEX `OrderId_OF`(`OrderId`) USING BTREE COMMENT '订单编号的唯一性',
   INDEX `CustomerId_O_F`(`CustomerId`) USING BTREE,
   INDEX `BookId_O_F`(`BookId`) USING BTREE,
-  UNIQUE INDEX `OrderId_OF`(`OrderId`) USING BTREE COMMENT '订单编号的唯一性',
   CONSTRAINT `BookId_O_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `CustomerId_O_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tb_order
+-- ----------------------------
+INSERT INTO `tb_order` VALUES (1, '201902211116473', 1, 425, 1, '2019-02-21 11:16:50', '0', '1', NULL, '', '山西省阳泉市平定县', 32.80, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (2, '201902211158264', 1, 416, 1, '2019-02-21 11:58:41', '0', '1', NULL, '哈哈哈', '河北省邢台市临城县', 40.00, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (3, '201902211418464', 1, 421, 1, '2019-02-21 14:18:18', '1', '1', '2019-02-21 14:18:19', '', '河北省邯郸市肥乡区', 41.60, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (4, '201902211632842', 1, 374, 1, '2019-02-21 16:32:12', '1', '1', '2019-02-21 16:37:55', '', '河北省秦皇岛市抚宁区', 74.00, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (5, '201902211651469', 1, 360, 1, '2019-02-21 16:51:21', '0', '1', NULL, '', '河北省秦皇岛市昌黎县', 12.90, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (6, '201902211716606', 1, 425, 1, '2019-02-21 17:16:18', '0', '1', NULL, '', '河北省唐山市开平区', 32.80, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (7, '201902211755903', 1, 416, 1, '2019-02-21 17:55:12', '0', '1', NULL, '', '山西省长治市襄垣县', 40.00, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (8, '201902211755151', 1, 416, 1, '2019-02-21 17:55:36', '1', '1', '2019-02-21 18:22:31', '', '山西省长治市襄垣县', 40.00, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (9, '201902211822327', 1, 364, 1, '2019-02-21 18:22:56', '1', '1', '2019-02-21 18:22:58', '', '河北省邯郸市肥乡区', 14.80, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (10, '201902211823809', 1, 356, 1, '2019-02-21 18:23:02', '0', '1', NULL, '', '河北省邯郸市肥乡区', 49.50, '0', NULL, '0', NULL);
 
 -- ----------------------------
 -- Table structure for tb_parameter
@@ -642,13 +656,17 @@ CREATE TABLE `tb_shopbook`  (
   INDEX `BookId_F`(`BookId`) USING BTREE,
   CONSTRAINT `BookId_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `CustomerId_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_shopbook
 -- ----------------------------
 INSERT INTO `tb_shopbook` VALUES (4, 1, 416, 1, '1', '山西省长治市襄垣县');
 INSERT INTO `tb_shopbook` VALUES (5, 1, 420, 1, '1', '山西省长治市襄垣县');
+INSERT INTO `tb_shopbook` VALUES (6, 1, 424, 1, '1', '河北省邢台市临城县');
+INSERT INTO `tb_shopbook` VALUES (7, 1, 421, 1, '1', '河北省邯郸市肥乡区');
+INSERT INTO `tb_shopbook` VALUES (8, 1, 364, 1, '1', '河北省邯郸市肥乡区');
+INSERT INTO `tb_shopbook` VALUES (9, 1, 356, 1, '1', '河北省邯郸市肥乡区');
 
 -- ----------------------------
 -- Table structure for tb_useraddress

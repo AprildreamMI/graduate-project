@@ -104,7 +104,6 @@ module.exports = {
 
   // 用户注册
   shopSignIn (req, res, next) {
-    console.log('req.body注册', req.body)
     async.series([
       callback => {
         let query_name_sql = `SELECT * FROM tb_customerinfo WHERE CustomerName = '${req.body.customerName}'`
@@ -176,8 +175,6 @@ module.exports = {
                     ${0}
                   )`
         db.query(sql, (err, result) => {
-          console.log('err注册',err)
-          console.log('result注册', result, sql)
           // 查看受影响的行数 如果等于 1 
           if (result.affectedRows === 1) {
             callback(err)
@@ -215,13 +212,11 @@ module.exports = {
     async.waterfall([
       callback => {
         let sql = ''
-        console.log('获取书籍req', req.query.bookTypeId)
         if (!Number(req.query.bookTypeId)) {
           sql = `SELECT count(*) AS total FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%' AND BookStatus = '1'`
         } else {
           sql = `SELECT count(*) AS total FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%' AND BookTypeId = ${req.query.bookTypeId} AND BookStatus = '1'`
         }
-        console.log('获取书籍SQL', sql)
         db.query(sql, (err, result) => {
           callback(err, result[0].total)
         })
@@ -321,7 +316,6 @@ module.exports = {
     // 判断用户是否登陆
     userUtils.isUserLogin(req, res)
     // 当前us噢登录用户的id
-    console.log(JSON.parse(req.cookies.user_me).CustomerId)
     let userId = JSON.parse(req.cookies.user_me).CustomerId
     let sql = `SELECT COUNT(*) AS shopCarCount FROM tb_shopbook where CustomerId = ${userId}`
     db.query(sql, (err, result) => {
@@ -345,6 +339,129 @@ module.exports = {
           data:null,
           code:1,
           message: "获取到购物车数量失败"
+        });
+      }
+    });
+  },
+
+  // 获取当前账户的购物车中的数量
+  shopGetOrderCount (req, res, next) {
+    // 判断用户是否登陆
+    userUtils.isUserLogin(req, res)
+    // 当前us噢登录用户的id
+    let userId = JSON.parse(req.cookies.user_me).CustomerId
+    let sql = `SELECT COUNT(*) AS orderCount FROM tb_order where CustomerId = ${userId}`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message: "获取订单数量失败"
+        });
+      }
+      if (result.length === 1) {
+        return res.status(200).json({
+          data: {
+            orderCount: result[0].orderCount
+          },
+          code: 0,
+          message: "获取订单数量成功"
+        });
+      } else {
+        return res.status(200).json({
+          data:null,
+          code:1,
+          message: "获取订单数量失败"
+        });
+      }
+    });
+  },
+
+  // 添加订单 
+  shopAddOrder (req, res, next) {
+    // 判断用户是否登陆
+    userUtils.isUserLogin(req, res)
+    let sql = `INSERT INTO tb_order
+              (
+                OrderId,
+                CustomerId,
+                BookId,
+                ordermount,
+                Orderdate,
+                isPlay,
+                paymethod,
+                payTime,
+                message,
+                address,
+                totalprice
+              )
+              VALUE
+              (
+                '${req.body.OrderId}',
+                ${req.body.CustomerId},
+                ${req.body.BookId},
+                ${req.body.ordermount},
+                '${req.body.Orderdate}',
+                '${req.body.isPlay}',
+                '${req.body.paymethod}',
+                ${req.body.payTime === ''? null : `'${req.body.payTime}'`},
+                '${req.body.message}',
+                '${req.body.address}',
+                ${req.body.totalprice}
+              );`
+              console.log('添加订单SQL', sql)
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message: "添加订单失败"
+        });
+      }
+      if (result.affectedRows === 1) {
+        return res.status(200).json({
+          data: null,
+          code: 0,
+          message: "添加订单成功"
+        });
+      } else {
+        return res.status(200).json({
+          data:null,
+          code:1,
+          message: "添加订单失败"
+        });
+      }
+    });
+  },
+
+  // 通过cookie 拿到用户的ID 然后连接查询拿到用户在购物车中的商品
+  shopGetUserShopCarGoods (req, res, next) {
+    // 判断用户是否登陆
+    userUtils.isUserLogin(req, res)
+    // 当前us噢登录用户的id
+    let userId = JSON.parse(req.cookies.user_me).CustomerId
+    let sql = `SELECT * FROM tb_shopbook, tb_bookinfo WHERE tb_shopbook.BookId = tb_bookinfo.BookId AND tb_shopbook.CustomerId = ${userId} `
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message: "获取购物车商品列表失败"
+        });
+      }
+      if (result.length !== 0) {
+        return res.status(200).json({
+          data: {
+            goodList: result
+          },
+          code: 0,
+          message: "获取购物车商品列表成功"
+        });
+      } else {
+        return res.status(200).json({
+          data:null,
+          code:1,
+          message: "获取购物车商品列表失败"
         });
       }
     });
@@ -571,7 +688,6 @@ module.exports = {
         })
       },
       (insertId, callback) => {
-        console.log('insertId', insertId)
         let sql = `SELECT * FROM tb_manager where AdminId = "${insertId}"`
         db.query(sql, (err, result) => {
           callback(err, result)
@@ -601,12 +717,10 @@ module.exports = {
   adminUpdateAdminPwd (req, res, next) {
     // 获取当前登陆的管理员id
     let adminId = adminUtils.getAdminId(req, res)
-    console.log('body', req.body, 'id', adminId)
     async.series([
       callback => {
         let sql = `SELECT * FROM tb_manager WHERE AdminId = ${adminId} AND AdminPwd = '${req.body.oldPwd}'`
         db.query(sql, (err, result) => {
-          console.log('result', result)
           if (result[0]) {
             callback(err)
           } else {
@@ -789,13 +903,11 @@ module.exports = {
     async.waterfall([
       callback => {
         let sql = ''
-        console.log('获取书籍req', req.query.bookTypeId)
         if (!Number(req.query.bookTypeId)) {
           sql = `SELECT count(*) AS total FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%'`
         } else {
           sql = `SELECT count(*) AS total FROM tb_bookinfo WHERE BookName LIKE '%${req.query.searchText}%' AND BookTypeId = ${req.query.bookTypeId}`
         }
-        console.log('获取书籍SQL', sql)
         db.query(sql, (err, result) => {
           callback(err, result[0].total)
         })
@@ -854,7 +966,6 @@ module.exports = {
         let query_isbn_sql = `SELECT * FROM tb_bookinfo WHERE Bookisbn = '${req.body.Bookisbn}'`
         db.query(query_isbn_sql, (err, result) => {
           if (result[0]) {
-            console.log('添加书籍', result[0])
             callback(new Error('ISBN重复'))
           } else {
             callback(err)
@@ -901,8 +1012,6 @@ module.exports = {
                     '${req.body.BookPackstyle}'
                   )`
         db.query(sql, (err, result) => {
-          console.log('添加书籍', sql)
-          console.log('添加书籍res', result)
           // 查看受影响的行数 如果等于 1 
           if (result.affectedRows === 1) {
             callback(err, result)
@@ -954,8 +1063,6 @@ module.exports = {
                 WHERE BookId = ${req.body.BookId}
               `
     db.query(sql, (err, result) => {
-      console.log('编辑书籍xinxi', sql)
-      console.log('编辑书籍result', result.affectedRows)
       if (err) {
         res.status(200).json({
           data: err,

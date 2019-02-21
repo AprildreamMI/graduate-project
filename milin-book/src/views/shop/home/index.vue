@@ -15,7 +15,7 @@
                 placeholder="选择分类，输入书名搜索"
                 @keyup.enter.native="searchUser"
                 v-model="searchText">
-                <el-select v-model="currentTypeId" slot="prepend" placeholder="请选择">
+                <el-select v-model="currentTypeId" slot="prepend" @change="handleClick" placeholder="请选择">
                   <el-option
                     v-for="item in bookTypeList"
                     :key="item.value"
@@ -183,12 +183,193 @@
           </el-col>
         </el-row>
       </div>
-      <el-dialog custom-class="my-el-dialog" :visible.sync="openBuyCurrentBookToPayDialog" width="640px" top="50px" :before-close="colseBuyBookToPayDiaLogBefor" append-to-body>
+      <el-dialog custom-class="my-el-dialog" :visible.sync="openBuyCurrentBookToPayDialog" width="440px" top="50px" :before-close="colseBuyBookToPayDiaLogBefor" append-to-body>
         <div class="handle-title text-16-M">
           付款
         </div>
         <div class="dialog-content">
-
+          <el-row type="flex" :gutter="0"  justify="space-between">
+            <el-col class="p-col" :span="4">
+              <p class="p-title">客户昵称:</p>
+            </el-col>
+            <el-col class="p-col" :span="2">
+            </el-col>
+            <el-col class="p-col" :span="18">
+              <p class="p-content">{{ user_me.CustomerName }}</p>
+            </el-col>
+          </el-row>
+          <el-row type="flex" :gutter="0" class="row-bg" justify="space-between">
+            <div class="book-outline-bottom-line"></div>
+          </el-row>
+          <el-row type="flex" :gutter="0"  justify="space-between">
+            <el-col class="p-col" :span="4">
+              <p class="p-title">订单编号:</p>
+            </el-col>
+            <el-col class="p-col" :span="2">
+            </el-col>
+            <el-col class="p-col" :span="18">
+              <p class="p-content">{{ order.OrderId }}</p>
+            </el-col>
+          </el-row>
+          <el-row type="flex" :gutter="0" class="row-bg" justify="space-between">
+            <div class="book-outline-bottom-line"></div>
+          </el-row>
+          <el-row type="flex" :gutter="0"  justify="space-between">
+            <el-col class="p-col" :span="4">
+              <p class="p-title">下单日期:</p>
+            </el-col>
+            <el-col class="p-col" :span="2">
+            </el-col>
+            <el-col class="p-col" :span="18">
+              <p class="p-content">{{ order.Orderdate }}</p>
+            </el-col>
+          </el-row>
+          <el-row type="flex" :gutter="0" class="row-bg" justify="space-between">
+            <div class="book-outline-bottom-line"></div>
+          </el-row>
+          <el-row type="flex" :gutter="0"  justify="space-between">
+            <el-col class="p-col" :span="4">
+              <p class="p-title">商品名称:</p>
+            </el-col>
+            <el-col class="p-col" :span="2">
+            </el-col>
+            <el-col class="p-col" :span="18">
+              <p class="p-content">{{ currentBuyBook.BookName }}</p>
+            </el-col>
+          </el-row>
+          <el-row type="flex" :gutter="0" class="row-bg" justify="space-between">
+            <div class="book-outline-bottom-line"></div>
+          </el-row>
+          <el-row type="flex" :gutter="0"  justify="space-between">
+            <el-col class="p-col" :span="4">
+              <p class="p-title">商品原价:</p>
+            </el-col>
+            <el-col class="p-col" :span="2">
+            </el-col>
+            <el-col class="p-col" :span="18">
+              <p class="p-content">{{ currentBuyBook.BookPrice }}</p>
+            </el-col>
+          </el-row>
+          <el-row type="flex" :gutter="0" class="row-bg" justify="space-between">
+            <div class="book-outline-bottom-line"></div>
+          </el-row>
+          <el-row type="flex" :gutter="0"  justify="space-between">
+            <el-col class="p-col" :span="4">
+              <p class="p-title">折扣:</p>
+            </el-col>
+            <el-col class="p-col" :span="2">
+            </el-col>
+            <el-col class="p-col" :span="18">
+              <p class="p-content">{{ currentBuyBook.BookDiscount }}折</p>
+            </el-col>
+          </el-row>
+          <el-row type="flex" :gutter="0" class="row-bg" justify="space-between">
+            <div class="book-outline-bottom-line"></div>
+          </el-row>
+          <el-row type="flex" :gutter="0"  justify="space-between">
+            <el-col class="p-col" :span="4">
+              <p class="p-title">商品现价:</p>
+            </el-col>
+            <el-col class="p-col" :span="2">
+            </el-col>
+            <el-col class="p-col" :span="18">
+              <p class="p-content">{{ currentBuyBook.BookMprice }}</p>
+            </el-col>
+          </el-row>
+          <el-row type="flex" :gutter="0" class="row-bg" justify="space-between">
+            <div class="book-outline-bottom-line"></div>
+          </el-row>
+          <el-row type="flex" :gutter="0"  justify="space-between">
+            <el-col class="p-col" :span="4">
+              <p class="p-title">购买数量:</p>
+            </el-col>
+            <el-col class="p-col" :span="2">
+            </el-col>
+            <el-col class="p-col" :span="18">
+              <p class="p-content">{{ order.ordermount }}(本)</p>
+            </el-col>
+          </el-row>
+          <el-row type="flex" :gutter="0" class="row-bg" justify="space-between">
+            <div class="book-outline-bottom-line"></div>
+          </el-row>
+          <el-row type="flex" :gutter="0"  justify="space-between">
+            <el-col class="p-col" :span="4">
+              <p class="p-title">收货地址:</p>
+            </el-col>
+            <el-col class="p-col" :span="2">
+            </el-col>
+            <el-col class="p-col" :span="18">
+              <p class="p-content">{{ order.address }}</p>
+            </el-col>
+          </el-row>
+          <el-row type="flex" :gutter="0" class="row-bg" justify="space-between">
+            <div class="book-outline-bottom-line"></div>
+          </el-row>
+          <el-row type="flex" :gutter="0"  justify="space-between">
+            <el-col class="p-col" style="line-height: 54px;" :span="4">
+              <p class="p-title">留言</p>
+            </el-col>
+            <el-col class="p-col" :span="2">
+            </el-col>
+            <el-col class="p-col" :span="18">
+              <el-input
+                type="textarea"
+                :rows=2
+                placeholder="请输入内容"
+                v-model="order.message">
+              </el-input>
+            </el-col>
+          </el-row>
+          <el-row type="flex" :gutter="0" class="row-bg" justify="space-between">
+            <div class="book-outline-bottom-line"></div>
+          </el-row>
+          <el-row type="flex" :gutter="0"  justify="space-between">
+            <el-col class="p-col" :span="4">
+              <p class="p-title">付款方式:</p>
+            </el-col>
+            <el-col :span="2">
+            </el-col>
+            <el-col class="p-col" style="height: 40px;" :span="18">
+              <el-select v-model="order.paymethod" placeholder="选择付款方式">
+                <el-option
+                  v-for="item in paySelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-row>
+          <el-row type="flex" :gutter="0" class="row-bg" justify="space-between">
+            <div class="book-outline-bottom-line"></div>
+          </el-row>
+          <el-row type="flex" :gutter="0"  justify="space-between">
+            <el-col class="p-total-price" :span="4">
+              <p class="p-title">总价:</p>
+            </el-col>
+            <el-col :span="2">
+            </el-col>
+            <el-col class="p-total-price-content" :span="18">
+              <p class="p-content">{{ order.ordermount * currentBuyBook.BookMprice }}￥</p>
+            </el-col>
+          </el-row>
+          <el-row type="flex" :gutter="0" class="row-bg" justify="space-between">
+            <div class="book-outline-bottom-line"></div>
+          </el-row>
+          <el-row type="flex" style="margin-top: 20px;height: 60px;" :gutter="0" class="address-row" justify="end">
+            <el-col :span="5">
+              <!-- 取消付款  添加订单订单状态为未付款 -->
+              <el-button @click="cancelPay" type="primary">
+                取 消
+              </el-button>
+            </el-col>
+            <el-col :span="5">
+              <!-- 付款 状态为未发货 -->
+              <el-button @click="toPay" type="danger">
+                付 款
+              </el-button>
+            </el-col>
+          </el-row>
         </div>
       </el-dialog>
     </el-dialog>
@@ -199,6 +380,7 @@ import shopHeader from '../header'
 import * as api from '../../../api'
 import VDistpicker from 'v-distpicker'
 import cookie from '../../../utils/cookie.js'
+import utils from '../../../utils/index.js'
 import moment from 'moment'
 
 export default {
@@ -222,6 +404,21 @@ export default {
       pageNum: 1,
       // 每页多少条数据
       pageSize: 12,
+      // 付款方式
+      paySelect: [
+        {
+          value: '1',
+          label: '支付宝'
+        },
+        {
+          value: '2',
+          label: '微信支付'
+        },
+        {
+          value: '3',
+          label: '银行卡'
+        }
+      ],
       // 当前所购买的书籍对象
       currentBuyBook: {
         BookId: '',
@@ -248,6 +445,8 @@ export default {
       ordermount: '',
       // 订单表
       order: {
+        // 订单编号
+        OrderId: '',
         // 客户编号
         CustomerId: '',
         // 图书编号
@@ -260,6 +459,8 @@ export default {
         isPlay: '0',
         // 支付方式
         paymethod: '1',
+        // 支付时间 如果没有支付 则为空 如果付款 则设置当前时间
+        payTime: '',
         // 留言
         message: '',
         // 收货地址
@@ -396,22 +597,6 @@ export default {
       }).catch(() => {
       })
     },
-    // 付款之前
-    colseBuyBookToPayDiaLogBefor (done) {
-      this.$confirm('是否取消付款?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        done()
-        // 重置 订单表
-        this.$message({
-          type: 'info',
-          message: '已取消付款，在“我的订单”中可以查看'
-        })
-      }).catch(() => {
-      })
-    },
     // 重置书籍购买对象
     resetBuyBookFrom () {
       this.currentBuyBook = {
@@ -431,6 +616,33 @@ export default {
         BookPackstyle: '',
         BookOutline: '',
         BookPic: ''
+      }
+    },
+    // 重置订单表
+    resetOrderFrom () {
+      this.order = {
+        // 订单编号
+        OrderId: '',
+        // 客户编号
+        CustomerId: '',
+        // 图书编号
+        BookId: '',
+        // 订购数量
+        ordermount: 1,
+        // 下单日期
+        Orderdate: '',
+        // 是否支付
+        isPlay: '0',
+        // 支付方式
+        paymethod: '1',
+        // 支付时间
+        payTime: '',
+        // 留言
+        message: '',
+        // 收货地址
+        address: '',
+        // 总卖出价
+        totalprice: ''
       }
     },
     // 地址的选择
@@ -463,6 +675,8 @@ export default {
 
           this.$message.success(res.data.message)
           loading.close()
+          // 更新购物车中的数量
+          this.$store.commit('setShopCarCount')
           // 关闭窗口
           this.colseBuyBookDiaLog()
         } else {
@@ -492,19 +706,95 @@ export default {
       }
       if (!this.address) {
         this.$message.warning('请选择地址')
+        return
       }
       // 赋值订单
       this.setOrder()
-      // 打开订单弹窗 输入留言点击付款时 再进行付款的请求
+      // 打开订单弹窗 输入留言点击付款时 再进行付款的请求 如果不付款 则改为添加订单
+      this.openBuyCurrentBookToPayDialog = true
+    },
+    // 取消付款之前
+    colseBuyBookToPayDiaLogBefor (done) {
+      this.$confirm('是否取消付款?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        done()
+        // 重置 订单表
+        // 取消付款 添加订单
+        this.cancelPayAddOrder()
+        this.$message({
+          type: 'info',
+          message: '已取消付款，在“我的订单”中可以查看'
+        })
+      }).catch(() => {
+      })
+    },
+    // 在付款窗口点击取消时 取消付款
+    cancelPay () {
+      console.log('取消付款')
+      // 取消付款
+      this.cancelPayAddOrder()
+    },
+    // 进行付款
+    toPay () {
+      this.order.isPlay = '1'
+      this.order.payTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
+      // 添加订单 付款状态为已付款
+      this.cancelPayAddOrder()
+    },
+    // 未付款 只添加订单
+    cancelPayAddOrder () {
+      if (!this.isLogin()) {
+        return
+      }
+      let loading = this.$loading({
+        lock: true,
+        text: '正在添加订单',
+        background: 'rgba(0, 0, 0, 0.2)'
+      })
+      api.shopAddOrder(this.order).then(res => {
+        if (res.data.code === 0) {
+          console.log(res.data)
+
+          this.$message.success(res.data.message)
+          loading.close()
+          // 更新订单中的数量
+          this.$store.commit('setOrderCount')
+          // 付款关闭窗口 并重置订单表单
+          this.openBuyCurrentBookToPayDialog = false
+          this.resetOrderFrom()
+        } else {
+          this.$message.error(res.data.message)
+          loading.close()
+        }
+      }).catch(error => {
+        console.error(error)
+        this.$message.error('添加订单失败, 请重试')
+        loading.close()
+      })
     },
     // 赋值订单
     setOrder () {
+      this.order.OrderId = utils.getOrderId()
       this.order.CustomerId = this.user_me.CustomerId
       this.order.BookId = this.currentBuyBook.BookId
       this.order.ordermount = this.ordermount
       this.order.Orderdate = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
       this.order.address = this.address
       this.order.totalprice = this.ordermount * this.currentBuyBook.BookMprice
+    },
+    // 验证是否登陆
+    isLogin () {
+      // 如果没有登录
+      if (!this.user_me) {
+        this.$message.info('请您登陆购买')
+        this.$router.push('/shop/login')
+        return false
+      } else {
+        return true
+      }
     }
   },
   components: {
@@ -522,10 +812,17 @@ export default {
 }
 </script>
 <style lang="scss">
-  .el-input--medium .el-input__inner {
-    height: 50px;
-  }
   .address-row {
+    .el-input--medium .el-input__inner {
+      height: 36px;
+    }
+  }
+  .header-search{
+    .el-input--medium .el-input__inner {
+      height: 36px;
+    }
+  }
+  .p-col {
     .el-input--medium .el-input__inner {
       height: 36px;
     }
@@ -763,5 +1060,23 @@ export default {
   }
   .address-row {
     margin-bottom: 20px;
+  }
+  .p-col {
+    line-height: 40px;
+    .p-title {
+      font-weight: 600;
+    }
+    .p-content {
+
+    }
+  }
+  .p-total-price {
+    font-size: 22px;
+    line-height: 60px;
+  }
+  .p-total-price-content {
+    line-height: 60px;
+    font-size: 32px;
+    color: $danger-color;
   }
 </style>
