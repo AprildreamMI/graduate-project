@@ -50,7 +50,7 @@
             <div class="order hover-red">
               <i class="iconfont icon-dingdan"></i>
               <el-badge :value="orderCount" class="item">
-                <p class="hover-red">我的订单</p>
+                <p class="hover-red" @click="pushShopOrder">我的订单</p>
               </el-badge>
             </div>
           </div>
@@ -112,6 +112,10 @@ export default {
     pushShopCar () {
       this.$router.push('/shop/shopCar')
     },
+    // 跳转到订单页
+    pushShopOrder () {
+      this.$router.push('/shop/shopOrder')
+    },
     // 跳转到首页
     pushHome () {
       this.$router.push('/shop/home')
@@ -124,7 +128,7 @@ export default {
       }
       return ''
     },
-    // 购物车中的胡亮
+    // 购物车中的数量
     shopCarCount () {
       return this.$store.state.shopCarCount
     },

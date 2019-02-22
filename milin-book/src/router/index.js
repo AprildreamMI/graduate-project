@@ -29,6 +29,10 @@ const routes = [
     path: '/shop/shopCar',
     component: () => import('../views/shop/shopCar')
   },
+  {
+    path: '/shop/shopOrder',
+    component: () => import('../views/shop/order')
+  },
   // 后台管理登陆页面
   {
     path: '/admin/login',
@@ -45,7 +49,14 @@ const routes = [
     children: [
       {
         path: 'stats',
-        component: () => import('../views/admin/stats')
+        component: () => import('../views/admin/stats'),
+        redirect: '/stats/typeBook',
+        children: [
+          {
+            path: 'typeBook',
+            component: () => import('../views/admin/stats/typeBook')
+          }
+        ]
       },
       {
         path: 'account/adminAccount',
@@ -64,6 +75,13 @@ const routes = [
       {
         path: 'books',
         component: () => import('../views/admin/books'),
+        meta: {
+          requireAuthAdminBooks: true
+        }
+      },
+      {
+        path: 'order',
+        component: () => import('../views/admin/order'),
         meta: {
           requireAuthAdminBooks: true
         }
@@ -133,6 +151,8 @@ router.beforeEach(async (to, from, next) => {
       if (to.meta.requireAuthAdminAccount && !(Number(JSON.parse(cookie.get('admin_me')).AdminFlag) < 3)) {
         next()
       } else if (to.meta.requireAuthAdminBooks && !(Number(JSON.parse(cookie.get('admin_me')).AdminFlag) < 2)) {
+        next()
+      } else if (!(Number(JSON.parse(cookie.get('admin_me')).AdminFlag) < 1)) {
         next()
       } else {
         next('/admin/login')

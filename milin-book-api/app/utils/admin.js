@@ -44,6 +44,20 @@ module.exports = {
   },
 
   /**
+   * 判断是不是第一等级的管理员
+   * @param {*} req 
+   * @param {*} res 
+   */
+  isAdmin (req, res) {
+    if (!req.cookies.admin_me) {
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.write('<head><meta charset="utf-8"/></head>');
+      res.end('<h1>错误！！！！没有权限</h1>');
+      return res.send()
+    }
+  },
+
+  /**
    * 获取当前管理员的id
    * @param {*} req 
    * @param {*} res 

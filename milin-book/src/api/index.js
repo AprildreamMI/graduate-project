@@ -42,6 +42,21 @@ export const shopAddOrder = (data) => post('/shop/addOrder', data)
 // 获取当前登录用户在购物车中的商品列表
 export const shopGetUserShopCarGoods = () => get('/shop/getUserShopCarGoods')
 
+// 获取当前登录用户的订单列表
+export const shopGetUserOrderList = () => get('/shop/getUserOrderList')
+
+// 在购物车中对商品就行删除
+export const shopDeleteUserShopCarGoods = (data) => remove('/shop/DeleteUserShopCarGoods', data)
+
+// 在订单中对商品就行删除 传入id
+export const shopDeleteUserOrderGoods = (data) => remove('/shop/DeleteUserOrderGoods', data)
+
+// 在订单中对商品就行更新为已支付 传入id
+export const shopUpdateUserOrderGoodsNoShip = (data) => put('/shop/updateUserOrderGoodsNoShip', data)
+
+// 在订单中对商品就行更新为已收货 传入id
+export const shopUpdateUserOrderGoodsReceipt = (data) => put('/shop/updateUserOrderGoodsReceipt', data)
+
 /*
   客户前台 end
 */
@@ -57,6 +72,18 @@ export const adminLogin = (data) => post('/admin/login', data)
 
 // 获取管理员账号列表
 export const adminGetAccountAll = () => get('/admin/getAccountAll')
+
+// 获取用户的数量
+export const adminGetUserCount = () => get('/admin/getUserCount')
+
+// 获取书籍的数量
+export const adminGetBookCount = () => get('/admin/getBookCount')
+
+// 获取订单的数量
+export const adminGetOrderCount = () => get('/admin/getOrderCount')
+
+// 获取分类书籍的数量
+export const adminGetTypeBookCount = () => get('/admin/getTypeBookCount')
 
 // 添加管理员账号
 export const adminAddAdminAccount = (data) => post('/admin/addAdminAccount', data)
@@ -94,6 +121,14 @@ export const adminUpdateBookInfo = (data) => put('/admin/updateBookInfo', data)
 
 // 改变书籍状态
 export const adminUpdateBookStatus = (data) => put('/admin/updateBookStatus', data)
+
+// =========订单列表管理=================
+
+// 获取全部订单
+export const adminGetrOrderList = () => get('/admin/getrOrderList')
+
+// 获取全部订单
+export const adminUpdateOrderShip = (data) => put('/admin/updateOrderShip', data)
 
 // =========当前管理员账号管理=================
 

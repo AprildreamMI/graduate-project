@@ -326,25 +326,17 @@ module.exports = {
           message: "获取到购物车数量失败"
         });
       }
-      if (result.length === 1) {
-        return res.status(200).json({
-          data: {
-            shopCarCount: result[0].shopCarCount
-          },
-          code: 0,
-          message: "获取到购物车数量成功"
-        });
-      } else {
-        return res.status(200).json({
-          data:null,
-          code:1,
-          message: "获取到购物车数量失败"
-        });
-      }
+      return res.status(200).json({
+        data: {
+          shopCarCount: result[0].shopCarCount
+        },
+        code: 0,
+        message: "获取到购物车数量成功"
+      });
     });
   },
 
-  // 获取当前账户的购物车中的数量
+  // 获取当前账户的订单中的数量
   shopGetOrderCount (req, res, next) {
     // 判断用户是否登陆
     userUtils.isUserLogin(req, res)
@@ -359,21 +351,13 @@ module.exports = {
           message: "获取订单数量失败"
         });
       }
-      if (result.length === 1) {
-        return res.status(200).json({
-          data: {
-            orderCount: result[0].orderCount
-          },
-          code: 0,
-          message: "获取订单数量成功"
-        });
-      } else {
-        return res.status(200).json({
-          data:null,
-          code:1,
-          message: "获取订单数量失败"
-        });
-      }
+      return res.status(200).json({
+        data: {
+          orderCount: result[0].orderCount
+        },
+        code: 0,
+        message: "获取订单数量成功"
+      });
     });
   },
 
@@ -409,7 +393,6 @@ module.exports = {
                 '${req.body.address}',
                 ${req.body.totalprice}
               );`
-              console.log('添加订单SQL', sql)
     db.query(sql, (err, result) => {
       if (err) {
         return res.status(200).json({
@@ -440,7 +423,7 @@ module.exports = {
     userUtils.isUserLogin(req, res)
     // 当前us噢登录用户的id
     let userId = JSON.parse(req.cookies.user_me).CustomerId
-    let sql = `SELECT * FROM tb_shopbook, tb_bookinfo WHERE tb_shopbook.BookId = tb_bookinfo.BookId AND tb_shopbook.CustomerId = ${userId} `
+    let sql = `SELECT * FROM tb_shopbook, tb_bookinfo WHERE tb_shopbook.BookId = tb_bookinfo.BookId AND tb_shopbook.CustomerId = ${userId}`
     db.query(sql, (err, result) => {
       if (err) {
         return res.status(200).json({
@@ -449,19 +432,160 @@ module.exports = {
           message: "获取购物车商品列表失败"
         });
       }
-      if (result.length !== 0) {
+      return res.status(200).json({
+        data: {
+          goodList: result
+        },
+        code: 0,
+        message: "获取购物车商品列表成功"
+      });
+    });
+  },
+
+  // 传入商品在购物车中ID 来删除
+  shopDeleteUserShopCarGoods (req, res, next) {
+    // 从Cookie 中获取用户的id
+    let userId = JSON.parse(req.cookies.user_me).CustomerId
+    // 判断用户是否登陆
+    userUtils.isUserLogin(req, res)
+    let sql = `DELETE FROM tb_shopbook WHERE shopCarId  = ${req.query.shopCarId} AND CustomerId = ${userId}`
+    db.query(sql, (err, result) => {
+      if (err) {
         return res.status(200).json({
-          data: {
-            goodList: result
-          },
+          data:err,
+          code:-1,
+          message: "删除商品失败"
+        });
+      }
+      if (result.affectedRows === 1) {
+        return res.status(200).json({
+          data: null,
           code: 0,
-          message: "获取购物车商品列表成功"
+          message: "删除商品成功"
         });
       } else {
         return res.status(200).json({
           data:null,
           code:1,
-          message: "获取购物车商品列表失败"
+          message: "删除商品失败"
+        });
+      }
+    });
+  },
+
+  // 通过cookie 拿到用户的ID 然后连接查询拿到用户的订单
+  shopGetUserOrderList (req, res, next) {
+    // 判断用户是否登陆
+    userUtils.isUserLogin(req, res)
+    // 当前登录用户的id
+    let userId = JSON.parse(req.cookies.user_me).CustomerId
+    let sql = `SELECT * FROM tb_order, tb_bookinfo WHERE tb_order.BookId = tb_bookinfo.BookId AND tb_order.CustomerId = ${userId}`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message: "获取订单列表失败"
+        });
+      }
+      return res.status(200).json({
+        data: {
+          orderList: result
+        },
+        code: 0,
+        message: "获取订单列表成功"
+      });
+    });
+  },
+
+  // 传入商品在订单中ID 来删除
+  shopDeleteUserOrderGoods (req, res, next) {
+    // 从Cookie 中获取用户的id
+    let userId = JSON.parse(req.cookies.user_me).CustomerId
+    // 判断用户是否登陆
+    userUtils.isUserLogin(req, res)
+    let sql = `DELETE FROM tb_order WHERE id  = ${req.query.id} AND CustomerId = ${userId}`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message: "删除订单失败"
+        });
+      }
+      if (result.affectedRows === 1) {
+        return res.status(200).json({
+          data: null,
+          code: 0,
+          message: "删除订单成功"
+        });
+      } else {
+        return res.status(200).json({
+          data:null,
+          code:1,
+          message: "删除订单失败"
+        });
+      }
+    });
+  },
+
+  // 传入商品在订单中ID , 来支付
+  shopUpdateUserOrderGoodsNoShip (req, res, next) {
+    // 从Cookie 中获取用户的id
+    let userId = JSON.parse(req.cookies.user_me).CustomerId
+    // 判断用户是否登陆
+    userUtils.isUserLogin(req, res)
+    let sql = `UPDATE tb_order SET isPlay = '1', payTime = '${moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')}' WHERE id = ${req.body.id} AND CustomerId = ${userId}`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message: "支付订单失败"
+        });
+      }
+      if (result.affectedRows === 1) {
+        return res.status(200).json({
+          data: null,
+          code: 0,
+          message: "支付订单成功"
+        });
+      } else {
+        return res.status(200).json({
+          data:null,
+          code:1,
+          message: "支付订单失败"
+        });
+      }
+    });
+  },
+
+  // 传入商品在订单中ID , 来收货
+  shopUpdateUserOrderGoodsReceipt (req, res, next) {
+    // 从Cookie 中获取用户的id
+    let userId = JSON.parse(req.cookies.user_me).CustomerId
+    // 判断用户是否登陆
+    userUtils.isUserLogin(req, res)
+    let sql = `UPDATE tb_order SET isReceipt = '1', receiptDate = '${moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')}' WHERE id = ${req.body.id} AND CustomerId = ${userId}`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message: "收货失败"
+        });
+      }
+      if (result.affectedRows === 1) {
+        return res.status(200).json({
+          data: null,
+          code: 0,
+          message: "收货成功"
+        });
+      } else {
+        return res.status(200).json({
+          data:null,
+          code:1,
+          message: "收货失败"
         });
       }
     });
@@ -537,6 +661,98 @@ module.exports = {
           },
           code: 0,
           message: "获取账号列表成功"
+        });
+      }
+    });
+  },
+
+  // 获取用户总数量
+  adminGetUserCount (req, res, next) {
+    adminUtils.isAdmin(req, res)
+    let sql = `SELECT COUNT(*) as userCount FROM tb_customerinfo`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message:"获取用户数量失败"
+        });
+      } else {
+        return res.status(200).json({
+          data: {
+            userCount: result[0].userCount
+          },
+          code: 0,
+          message: "获取用户数量成功"
+        });
+      }
+    });
+  },
+
+  // 获取书籍总数量
+  adminGetBookCount (req, res, next) {
+    adminUtils.isAdmin(req, res)
+    let sql = `SELECT COUNT(*) as bookCount FROM tb_bookinfo`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message:"获取书籍数量失败"
+        });
+      } else {
+        return res.status(200).json({
+          data: {
+            bookCount: result[0].bookCount
+          },
+          code: 0,
+          message: "获取书籍数量成功"
+        });
+      }
+    });
+  },
+
+  // 获取订单总数量
+  adminGetOrderCount (req, res, next) {
+    adminUtils.isAdmin(req, res)
+    let sql = `SELECT COUNT(*) as orderCount FROM tb_order`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message:"获取订单数量失败"
+        });
+      } else {
+        return res.status(200).json({
+          data: {
+            orderCount: result[0].orderCount
+          },
+          code: 0,
+          message: "获取订单数量成功"
+        });
+      }
+    });
+  },
+
+  // 获取各个分类书籍的数量
+  adminGetTypeBookCount (req, res, next) {
+    adminUtils.isAdmin(req, res)
+    let sql = `SELECT BookTypeName as name, COUNT(*) as value FROM tb_bookinfo, tb_booktypeinfo WHERE tb_bookinfo.BookTypeId = tb_booktypeinfo.BookTypeId  GROUP BY tb_bookinfo.BookTypeId`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message:"获取分类数量失败"
+        });
+      } else {
+        return res.status(200).json({
+          data: {
+            typeCount: result
+          },
+          code: 0,
+          message: "获取分类数量成功"
         });
       }
     });
@@ -1108,6 +1324,58 @@ module.exports = {
           data:null,
           code:1,
           message: "改变书籍状态失败"
+        });
+      }
+    });
+  },
+
+  // ==========书籍管理===========
+
+  // 管理员获取所有的订单
+  adminGetrOrderList (req, res, next) {
+    adminUtils.isBooksAdmin(req, res)
+    let sql = `SELECT * FROM tb_order, tb_bookinfo WHERE tb_order.BookId = tb_bookinfo.BookId`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message: "获取订单列表失败"
+        });
+      }
+      return res.status(200).json({
+        data: {
+          orderList: result
+        },
+        code: 0,
+        message: "获取订单列表成功"
+      });
+    });
+  },
+
+  // 管理员进行发货
+  adminUpdateOrderShip (req, res, next) {
+    adminUtils.isBooksAdmin(req, res)
+    let sql = `UPDATE tb_order SET isShip = '1', shipTime = '${moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')}' WHERE id = ${req.body.id}`
+    db.query(sql, (err, result) => {
+      if (err) {
+        return res.status(200).json({
+          data:err,
+          code:-1,
+          message: "发货失败"
+        });
+      }
+      if (result.affectedRows === 1) {
+        return res.status(200).json({
+          data: null,
+          code: 0,
+          message: "发货成功"
+        });
+      } else {
+        return res.status(200).json({
+          data:null,
+          code:1,
+          message: "发货失败"
         });
       }
     });

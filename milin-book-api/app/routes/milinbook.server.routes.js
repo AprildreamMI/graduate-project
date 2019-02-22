@@ -39,9 +39,29 @@ module.exports = function(app){
   app.route('/api/shop/addOrder')
     .post(MilinBookController.shopAddOrder)
 
-  // 添加订单 状态为未付款
+  // 获取当前账号购物车中的商品
   app.route('/api/shop/getUserShopCarGoods')
     .get(MilinBookController.shopGetUserShopCarGoods)
+
+  // 传入购物车中商品的ID 进行删除
+  app.route('/api/shop/DeleteUserShopCarGoods')
+    .delete(MilinBookController.shopDeleteUserShopCarGoods)
+
+  // 获取当前账号的订单
+  app.route('/api/shop/getUserOrderList')
+    .get(MilinBookController.shopGetUserOrderList)
+
+  // 传入订单中商品的订单ID 进行删除
+  app.route('/api/shop/DeleteUserOrderGoods')
+    .delete(MilinBookController.shopDeleteUserOrderGoods)
+
+  // 传入订单中商品的订单ID 更改状态 为已支付未发货
+  app.route('/api/shop/updateUserOrderGoodsNoShip')
+    .put(MilinBookController.shopUpdateUserOrderGoodsNoShip)
+
+  // 传入订单中商品的订单ID 更改状态 已收货
+  app.route('/api/shop/updateUserOrderGoodsReceipt')
+    .put(MilinBookController.shopUpdateUserOrderGoodsReceipt)
 
  
   /* 
@@ -83,6 +103,22 @@ module.exports = function(app){
   app.route('/api/admin/getUserList')
     .get(MilinBookController.adminGetUserAccountList)
 
+  // 获取用户的总数量
+  app.route('/api/admin/getUserCount')
+    .get(MilinBookController.adminGetUserCount)
+
+  // 获取书籍的总数量
+  app.route('/api/admin/getBookCount')
+    .get(MilinBookController.adminGetBookCount)
+
+  // 获取订单的总数量
+  app.route('/api/admin/getOrderCount')
+    .get(MilinBookController.adminGetOrderCount)
+
+  // 获取各个分类书籍的数量
+  app.route('/api/admin/getTypeBookCount')
+    .get(MilinBookController.adminGetTypeBookCount)
+
   // 更改用户账号状态
   app.route('/api/admin/changeUserStatus')
     .put(MilinBookController.adminChangeUserAccountStatus)
@@ -113,6 +149,17 @@ module.exports = function(app){
   // 编辑书籍信息
   app.route('/api/admin/updateBookStatus')
     .put(MilinBookController.adminUpdateBookStatus)
+
+  // ==========订单管理===========
+
+  // 编辑书籍信息
+  app.route('/api/admin/getrOrderList')
+    .get(MilinBookController.adminGetrOrderList)
+
+  app.route('/api/admin/updateOrderShip')
+    .put(MilinBookController.adminUpdateOrderShip)
+
+
 
   // ==========当前管理员账号管理===========
 

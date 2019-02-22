@@ -11,7 +11,7 @@
  Target Server Version : 80014
  File Encoding         : 65001
 
- Date: 21/02/2019 18:24:11
+ Date: 22/02/2019 20:49:22
 */
 
 SET NAMES utf8mb4;
@@ -442,7 +442,7 @@ INSERT INTO `tb_bookinfo` VALUES (420, 9, '瓦尔登湖(珍藏本) 朗读者朗�
 INSERT INTO `tb_bookinfo` VALUES (421, 6, '斯凯瑞金色童书·第一辑（全4册）', '贵州人民出版社', '2007-05-01 00:00:00', 12, '斯凯瑞', '李晓评 ', '9284655', 83.20, '人人都爱斯凯瑞！向孩子揭示日常社会的方方面面，城市协助、农场工作、建筑过程、消防作业、职业分工等，帮助2-6岁儿童发展认知能力。风靡美国五十年，全球畅销超过三亿册（蒲公英童书馆出品） 5万童书 5折封顶 新春伊始 扬帆起航>> ', 41.60, 390957, 5.00, 'http://img3m5.ddimg.cn/39/23/9284655-1_l_12.jpg', 100, '平装-胶订', '1');
 INSERT INTO `tb_bookinfo` VALUES (422, 4, '格局', '江苏文艺出版社', '2015-05-01 00:00:00', 32, '何权峰', '', '9787539962887', 36.00, '未来的人可以分为三种格局：做事-做势-做局，5年后、10年后、N年后，要想站在你想要的“高位”，当下的你该怎么办!思维决定出路，格局决定结局；全球各界成功人士都在修炼的格局秘密。 爱读书，2019行动派，经管励志，五折封顶，点此查看 ', 18.00, 0, 5.00, 'http://img3m8.ddimg.cn/12/19/23698038-1_l_1.jpg', 100, '平装-胶订', '1');
 INSERT INTO `tb_bookinfo` VALUES (423, 13, '无羁（墨香铜臭作品）', '四川文艺出版社', '2018-11-26 00:00:00', 128, '墨香铜臭', '', '9787541151736', 48.00, '“是非在己、毁誉由人、得失不论！”人气作者墨香铜臭成名之作，晋江积分近140亿，连续一年蝉联晋江销售金榜、千字金榜、全站霸王票总榜冠军！随书赠蓝家家训雅正集！魔道祖师  ', 26.40, 21105, 5.50, 'http://img3m9.ddimg.cn/23/21/26263139-1_l_6.jpg', 100, '平装-胶订', '1');
-INSERT INTO `tb_bookinfo` VALUES (424, 3, '苏菲的世界（新版）', '作家出版社', '2017-09-19 00:00:00', 32, '乔斯坦·贾德', '', '9787506394864', 38.00, '二十世纪百部经典名著之一 全球销量超过4500万册  ', 28.50, 106581, 7.50, 'http://img3m9.ddimg.cn/41/0/25170989-1_l_5.jpg', 100, '平装-胶订', '1');
+INSERT INTO `tb_bookinfo` VALUES (424, 3, '苏菲的世界（新版）', '作家出版社', '2017-09-19 00:00:00', 32, '乔斯坦·贾德', '', '9787506394864', 38.00, '二十世纪百部经典名著之一 全球销量超过4500万册  ', 28.50, 106581, 7.50, 'http://img3m9.ddimg.cn/41/0/25170989-1_l_5.jpg', 100, '平装-胶订', '0');
 INSERT INTO `tb_bookinfo` VALUES (425, 3, '红楼梦原著版（上、下册）（全两册）（1-9年级必读书单）', '人民文学出版社', '2013-01-01 00:00:00', 32, '曹雪芹', '', '9787020002207', 59.70, '权威版本！收藏经典！  ', 32.80, 257590, 5.50, 'http://img3m1.ddimg.cn/9/22/102771-1_l_2.jpg', 100, '平装-胶订', '1');
 INSERT INTO `tb_bookinfo` VALUES (426, 6, '不可不知的科学', '长江少年儿童出版社', '2017-12-01 00:00:00', 16, '约翰范登', '', '9787556057832', 48.00, '国际畅销科普书作家、4次入围“安万特科学图书奖”——约翰-范登全新作品！与时俱进的科学知识，精致有趣的原理讲解，从小培养科学家气质！（海豚传媒出品） 5万童书 5折封顶 新春伊始 扬帆起航>> ', 24.00, 90713, 5.00, 'http://img3m9.ddimg.cn/42/27/25175049-1_l_3.jpg', 100, '精装', '1');
 INSERT INTO `tb_bookinfo` VALUES (427, 5, '人活到极致，一定是素与简Ⅱ（心灵赋能）', '台海出版社', '2019-01-01 00:00:00', 32, '山口势子', '李玲', '9787516821589', 48.00, '从断舍离到极简主义欧美日韩推崇的断舍离和共享式生活人民日报多家媒体联合盛推，扎克伯格乔布斯爱因斯坦致力践行的生活方式影响数千万中国人内附200多张日本人气博主山口势子亲身实践版精美插图全彩四色印刷！', 33.00, 0, 6.90, 'public/upload/img/bookPic/26436713-1_l_3.jpg', 108, '平装-胶订', '1');
@@ -536,7 +536,7 @@ CREATE TABLE `tb_customerinfo`  (
 -- ----------------------------
 -- Records of tb_customerinfo
 -- ----------------------------
-INSERT INTO `tb_customerinfo` VALUES (1, '死者的代言人', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278540', '1159902844@qq.com', '武汉', '2019-02-16 17:04:58', 7, '2019-02-21 14:46:40', NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (1, '死者的代言人', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278540', '1159902844@qq.com', '武汉', '2019-02-16 17:04:58', 8, '2019-02-22 09:47:52', NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 INSERT INTO `tb_customerinfo` VALUES (2, '死者的代言人2', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278541', '1159902544@qq.com', '武汉', '2019-02-16 17:06:27', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '0');
 INSERT INTO `tb_customerinfo` VALUES (3, '安德的游戏', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '安德', '1', '17566458892', 'andedeyouxi@qq.com', '虫巢', '2019-02-16 17:12:54', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 INSERT INTO `tb_customerinfo` VALUES (4, '我不是许三观', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '许三观', '1', '17388902245', 'xusanguan@qq.com', '不详', '2019-02-16 17:14:20', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
@@ -605,21 +605,24 @@ CREATE TABLE `tb_order`  (
   INDEX `BookId_O_F`(`BookId`) USING BTREE,
   CONSTRAINT `BookId_O_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `CustomerId_O_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_order
 -- ----------------------------
-INSERT INTO `tb_order` VALUES (1, '201902211116473', 1, 425, 1, '2019-02-21 11:16:50', '0', '1', NULL, '', '山西省阳泉市平定县', 32.80, '0', NULL, '0', NULL);
-INSERT INTO `tb_order` VALUES (2, '201902211158264', 1, 416, 1, '2019-02-21 11:58:41', '0', '1', NULL, '哈哈哈', '河北省邢台市临城县', 40.00, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (1, '201902211116473', 1, 425, 1, '2019-02-21 11:16:50', '1', '1', '2019-02-21 13:16:50', '', '山西省阳泉市平定县', 32.80, '1', '2019-02-25 13:16:50', '1', '2019-02-22 18:53:47');
 INSERT INTO `tb_order` VALUES (3, '201902211418464', 1, 421, 1, '2019-02-21 14:18:18', '1', '1', '2019-02-21 14:18:19', '', '河北省邯郸市肥乡区', 41.60, '0', NULL, '0', NULL);
 INSERT INTO `tb_order` VALUES (4, '201902211632842', 1, 374, 1, '2019-02-21 16:32:12', '1', '1', '2019-02-21 16:37:55', '', '河北省秦皇岛市抚宁区', 74.00, '0', NULL, '0', NULL);
-INSERT INTO `tb_order` VALUES (5, '201902211651469', 1, 360, 1, '2019-02-21 16:51:21', '0', '1', NULL, '', '河北省秦皇岛市昌黎县', 12.90, '0', NULL, '0', NULL);
-INSERT INTO `tb_order` VALUES (6, '201902211716606', 1, 425, 1, '2019-02-21 17:16:18', '0', '1', NULL, '', '河北省唐山市开平区', 32.80, '0', NULL, '0', NULL);
-INSERT INTO `tb_order` VALUES (7, '201902211755903', 1, 416, 1, '2019-02-21 17:55:12', '0', '1', NULL, '', '山西省长治市襄垣县', 40.00, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (5, '201902211651469', 1, 360, 1, '2019-02-21 16:51:21', '1', '1', '2019-02-22 16:50:37', '', '河北省秦皇岛市昌黎县', 12.90, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (6, '201902211716606', 1, 425, 1, '2019-02-21 17:16:18', '1', '1', '2019-02-22 16:49:32', '', '河北省唐山市开平区', 32.80, '0', NULL, '0', NULL);
 INSERT INTO `tb_order` VALUES (8, '201902211755151', 1, 416, 1, '2019-02-21 17:55:36', '1', '1', '2019-02-21 18:22:31', '', '山西省长治市襄垣县', 40.00, '0', NULL, '0', NULL);
 INSERT INTO `tb_order` VALUES (9, '201902211822327', 1, 364, 1, '2019-02-21 18:22:56', '1', '1', '2019-02-21 18:22:58', '', '河北省邯郸市肥乡区', 14.80, '0', NULL, '0', NULL);
-INSERT INTO `tb_order` VALUES (10, '201902211823809', 1, 356, 1, '2019-02-21 18:23:02', '0', '1', NULL, '', '河北省邯郸市肥乡区', 49.50, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (12, '201902221027734', 1, 364, 1, '2019-02-22 10:27:39', '1', '1', '2019-02-22 10:27:41', '', '河北省邯郸市肥乡区', 14.80, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (13, '201902221031628', 1, 421, 1, '2019-02-22 10:31:26', '1', '1', '2019-02-22 10:31:28', '', '河北省邯郸市肥乡区', 41.60, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (14, '201902221036549', 1, 340, 1, '2019-02-22 10:36:42', '1', '1', '2019-02-22 10:36:43', '', '山西省长治市襄垣县', 18.00, '1', '2019-02-22 18:06:08', '1', '2019-02-22 18:53:49');
+INSERT INTO `tb_order` VALUES (15, '201902221650659', 1, 342, 1, '2019-02-22 16:50:45', '1', '1', '2019-02-22 16:50:46', '', '山西省长治市襄垣县', 16.40, '1', '2019-02-22 18:05:55', '1', '2019-02-22 18:54:18');
+INSERT INTO `tb_order` VALUES (16, '201902221650691', 1, 314, 1, '2019-02-22 16:50:48', '1', '1', '2019-02-22 16:50:49', '', '山西省长治市襄垣县', 99.00, '1', '2019-02-22 18:04:50', '0', NULL);
+INSERT INTO `tb_order` VALUES (17, '201902221732391', 1, 38, 1, '2019-02-22 17:32:56', '0', '1', NULL, '', '辽宁省本溪市本溪满族自治县', 19.90, '0', NULL, '0', NULL);
 
 -- ----------------------------
 -- Table structure for tb_parameter
@@ -656,17 +659,14 @@ CREATE TABLE `tb_shopbook`  (
   INDEX `BookId_F`(`BookId`) USING BTREE,
   CONSTRAINT `BookId_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `CustomerId_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_shopbook
 -- ----------------------------
-INSERT INTO `tb_shopbook` VALUES (4, 1, 416, 1, '1', '山西省长治市襄垣县');
-INSERT INTO `tb_shopbook` VALUES (5, 1, 420, 1, '1', '山西省长治市襄垣县');
-INSERT INTO `tb_shopbook` VALUES (6, 1, 424, 1, '1', '河北省邢台市临城县');
-INSERT INTO `tb_shopbook` VALUES (7, 1, 421, 1, '1', '河北省邯郸市肥乡区');
-INSERT INTO `tb_shopbook` VALUES (8, 1, 364, 1, '1', '河北省邯郸市肥乡区');
-INSERT INTO `tb_shopbook` VALUES (9, 1, 356, 1, '1', '河北省邯郸市肥乡区');
+INSERT INTO `tb_shopbook` VALUES (10, 1, 332, 1, '1', '山西省长治市襄垣县');
+INSERT INTO `tb_shopbook` VALUES (11, 1, 337, 1, '1', '山西省长治市襄垣县');
+INSERT INTO `tb_shopbook` VALUES (13, 1, 334, 1, '1', '山西省长治市襄垣县');
 
 -- ----------------------------
 -- Table structure for tb_useraddress

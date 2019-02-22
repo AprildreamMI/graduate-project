@@ -49,18 +49,14 @@
               <span slot="title">用户账号</span>
             </el-menu-item>
         </el-submenu>
-        <el-menu-item index="/admin/books">
-          <i class="iconfont icon-shu alibaba-icont"></i>
-          <span slot="title">书籍管理</span>
-        </el-menu-item>
         <!-- 权限小于2的不能进行订单的管理 -->
-        <el-menu-item index="4" :disabled="Number(admin_me.AdminFlag) < 2">
+        <el-menu-item index="/admin/order" :disabled="Number(admin_me.AdminFlag) < 2">
           <i class="iconfont icon-dingdan alibaba-icont"></i>
           <span slot="title">订单管理</span>
         </el-menu-item>
-        <el-menu-item index="5">
-          <i class="iconfont icon-chat alibaba-icont"></i>
-          <span slot="title">评论管理</span>
+        <el-menu-item index="/admin/books">
+          <i class="iconfont icon-shu alibaba-icont"></i>
+          <span slot="title">书籍管理</span>
         </el-menu-item>
       </el-menu>
     </left-sidebar>

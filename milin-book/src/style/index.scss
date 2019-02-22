@@ -171,3 +171,14 @@ body {
   margin-bottom: 0;
   width: 50%;
 }
+
+.el-tabs__nav-wrap {
+  &.is-scrollable {
+    &.is-top {
+      background-color: #f5f5f5;
+    }
+  }
+}
+.el-tabs__nav-scroll {
+  background-color: #f5f5f5;
+}
