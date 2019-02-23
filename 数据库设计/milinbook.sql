@@ -11,7 +11,7 @@
  Target Server Version : 80014
  File Encoding         : 65001
 
- Date: 22/02/2019 20:49:22
+ Date: 23/02/2019 18:44:26
 */
 
 SET NAMES utf8mb4;
@@ -536,11 +536,11 @@ CREATE TABLE `tb_customerinfo`  (
 -- ----------------------------
 -- Records of tb_customerinfo
 -- ----------------------------
-INSERT INTO `tb_customerinfo` VALUES (1, '死者的代言人', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278540', '1159902844@qq.com', '武汉', '2019-02-16 17:04:58', 8, '2019-02-22 09:47:52', NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (1, '死者的代言人', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278540', '1159902844@qq.com', '武汉', '2019-02-16 17:04:58', 12, '2019-02-23 17:17:47', NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 INSERT INTO `tb_customerinfo` VALUES (2, '死者的代言人2', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278541', '1159902544@qq.com', '武汉', '2019-02-16 17:06:27', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '0');
 INSERT INTO `tb_customerinfo` VALUES (3, '安德的游戏', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '安德', '1', '17566458892', 'andedeyouxi@qq.com', '虫巢', '2019-02-16 17:12:54', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 INSERT INTO `tb_customerinfo` VALUES (4, '我不是许三观', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '许三观', '1', '17388902245', 'xusanguan@qq.com', '不详', '2019-02-16 17:14:20', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
-INSERT INTO `tb_customerinfo` VALUES (5, '明教教主', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '张无忌', '1', '17566844123', 'zhangwuji@qq.com', '光明顶', '2019-02-17 14:25:00', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (5, '明教教主', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '张无忌', '1', '17566844123', 'zhangwuji@qq.com', '光明顶', '2019-02-17 14:25:00', 1, '2019-02-23 16:52:52', NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 INSERT INTO `tb_customerinfo` VALUES (6, '峨嵋掌门', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '周芷若', '1', '17466502231', 'zhouzhiruo@qq.com', '峨眉', '2019-02-17 14:25:59', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 INSERT INTO `tb_customerinfo` VALUES (7, '郡主', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵敏', '2', '17655892234', 'zhaoming@qq.com', '大都', '2019-02-17 14:26:47', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 INSERT INTO `tb_customerinfo` VALUES (8, '昭儿', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '小昭', '2', '17655423321', 'xiaozhao@qq.com', '波斯', '2019-02-17 14:27:32', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
@@ -605,17 +605,17 @@ CREATE TABLE `tb_order`  (
   INDEX `BookId_O_F`(`BookId`) USING BTREE,
   CONSTRAINT `BookId_O_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `CustomerId_O_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_order
 -- ----------------------------
 INSERT INTO `tb_order` VALUES (1, '201902211116473', 1, 425, 1, '2019-02-21 11:16:50', '1', '1', '2019-02-21 13:16:50', '', '山西省阳泉市平定县', 32.80, '1', '2019-02-25 13:16:50', '1', '2019-02-22 18:53:47');
-INSERT INTO `tb_order` VALUES (3, '201902211418464', 1, 421, 1, '2019-02-21 14:18:18', '1', '1', '2019-02-21 14:18:19', '', '河北省邯郸市肥乡区', 41.60, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (3, '201902211418464', 1, 421, 1, '2019-02-21 14:18:18', '1', '1', '2019-02-21 14:18:19', '', '河北省邯郸市肥乡区', 41.60, '1', '2019-02-23 18:18:57', '0', NULL);
 INSERT INTO `tb_order` VALUES (4, '201902211632842', 1, 374, 1, '2019-02-21 16:32:12', '1', '1', '2019-02-21 16:37:55', '', '河北省秦皇岛市抚宁区', 74.00, '0', NULL, '0', NULL);
 INSERT INTO `tb_order` VALUES (5, '201902211651469', 1, 360, 1, '2019-02-21 16:51:21', '1', '1', '2019-02-22 16:50:37', '', '河北省秦皇岛市昌黎县', 12.90, '0', NULL, '0', NULL);
 INSERT INTO `tb_order` VALUES (6, '201902211716606', 1, 425, 1, '2019-02-21 17:16:18', '1', '1', '2019-02-22 16:49:32', '', '河北省唐山市开平区', 32.80, '0', NULL, '0', NULL);
-INSERT INTO `tb_order` VALUES (8, '201902211755151', 1, 416, 1, '2019-02-21 17:55:36', '1', '1', '2019-02-21 18:22:31', '', '山西省长治市襄垣县', 40.00, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (8, '201902211755151', 1, 416, 1, '2019-02-21 17:55:36', '1', '1', '2019-02-21 18:22:31', '', '山西省长治市襄垣县', 40.00, '1', '2019-02-23 18:18:58', '0', NULL);
 INSERT INTO `tb_order` VALUES (9, '201902211822327', 1, 364, 1, '2019-02-21 18:22:56', '1', '1', '2019-02-21 18:22:58', '', '河北省邯郸市肥乡区', 14.80, '0', NULL, '0', NULL);
 INSERT INTO `tb_order` VALUES (12, '201902221027734', 1, 364, 1, '2019-02-22 10:27:39', '1', '1', '2019-02-22 10:27:41', '', '河北省邯郸市肥乡区', 14.80, '0', NULL, '0', NULL);
 INSERT INTO `tb_order` VALUES (13, '201902221031628', 1, 421, 1, '2019-02-22 10:31:26', '1', '1', '2019-02-22 10:31:28', '', '河北省邯郸市肥乡区', 41.60, '0', NULL, '0', NULL);
@@ -623,6 +623,7 @@ INSERT INTO `tb_order` VALUES (14, '201902221036549', 1, 340, 1, '2019-02-22 10:
 INSERT INTO `tb_order` VALUES (15, '201902221650659', 1, 342, 1, '2019-02-22 16:50:45', '1', '1', '2019-02-22 16:50:46', '', '山西省长治市襄垣县', 16.40, '1', '2019-02-22 18:05:55', '1', '2019-02-22 18:54:18');
 INSERT INTO `tb_order` VALUES (16, '201902221650691', 1, 314, 1, '2019-02-22 16:50:48', '1', '1', '2019-02-22 16:50:49', '', '山西省长治市襄垣县', 99.00, '1', '2019-02-22 18:04:50', '0', NULL);
 INSERT INTO `tb_order` VALUES (17, '201902221732391', 1, 38, 1, '2019-02-22 17:32:56', '0', '1', NULL, '', '辽宁省本溪市本溪满族自治县', 19.90, '0', NULL, '0', NULL);
+INSERT INTO `tb_order` VALUES (18, '201902231653144', 5, 426, 1, '2019-02-23 16:53:06', '0', '1', NULL, '', '天津市天津城区河东区', 24.00, '0', NULL, '0', NULL);
 
 -- ----------------------------
 -- Table structure for tb_parameter
@@ -659,7 +660,7 @@ CREATE TABLE `tb_shopbook`  (
   INDEX `BookId_F`(`BookId`) USING BTREE,
   CONSTRAINT `BookId_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `CustomerId_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_shopbook

@@ -24,6 +24,9 @@ export const shopLogin = (data) => post('/shop/login', data)
 // 前台注册
 export const shopSignIn = (data) => post('/shop/signIn', data)
 
+// 用户修改密码
+export const shopUpdateUserPwd = (data) => put('/shop/updateUserPwd', data)
+
 // 获取图书列表
 export const shopGetBookList = (data) => get('/shop/getBookList', data)
 

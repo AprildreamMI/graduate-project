@@ -14,7 +14,6 @@ export default {
   setShopCarCount (state) {
     api.shopGetShopCarCount().then(res => {
       if (res.data.code === 0) {
-        console.log(res.data)
         state.shopCarCount = res.data.data.shopCarCount
         // this.$message.success(res.data.message)
       } else {
@@ -32,7 +31,6 @@ export default {
   setOrderCount (state) {
     api.shopGetOrderCount().then(res => {
       if (res.data.code === 0) {
-        console.log(res.data)
         state.orderCount = res.data.data.orderCount
         // this.$message.success(res.data.message)
       } else {

@@ -19,9 +19,13 @@ module.exports = function(app){
   app.route('/api/shop/signIn')
     .post(MilinBookController.shopSignIn)
 
-  // 前台注册
+  // 前台获取图书列表
   app.route('/api/shop/getBookList')
     .get(MilinBookController.shopGetBookList)
+
+  // 前台用户修改密码
+  app.route('/api/shop/updateUserPwd')
+    .put(MilinBookController.shopUpdateUserPwd)
 
   // 加入购物车
   app.route('/api/shop/addShopCar')
@@ -152,10 +156,11 @@ module.exports = function(app){
 
   // ==========订单管理===========
 
-  // 编辑书籍信息
+  // 获取订单列表
   app.route('/api/admin/getrOrderList')
     .get(MilinBookController.adminGetrOrderList)
 
+  // 进行收货
   app.route('/api/admin/updateOrderShip')
     .put(MilinBookController.adminUpdateOrderShip)
 

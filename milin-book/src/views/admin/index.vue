@@ -30,10 +30,16 @@
         :default-active="active"
         class="el-menu-vertical-demo"
         :router="true">
-        <el-menu-item index="/admin/stats">
-          <i class="iconfont icon-tongji2 alibaba-icont"></i>
-          <span slot="title">统计</span>
-        </el-menu-item>
+        <el-submenu index="/admin/stats">
+          <template slot="title">
+            <i class="iconfont icon-tongji2 alibaba-icont"></i>
+            <span>统计</span>
+          </template>
+            <el-menu-item index="/admin/stats/typeBook">
+              <i class="iconfont icon-bingtu"></i>
+              <span slot="title">书籍统计</span>
+            </el-menu-item>
+        </el-submenu>
         <!-- 权限小于3的，不能进行账号的管理 -->
         <el-submenu index="/admin/account" :disabled="Number(admin_me.AdminFlag) < 3">
           <template slot="title">

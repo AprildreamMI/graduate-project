@@ -1,5 +1,7 @@
 <template>
-  <v-echarts :style="{'height':'700px'}" :option="option" v-loading="loading" @ready="onReady"></v-echarts>
+  <div class="chart">
+    <v-echarts :style="{'height':'700px','width':'100%'}" :option="option" v-loading="loading" @ready="onReady"></v-echarts>
+  </div>
 </template>
 <script>
 import * as api from '../../../../api'
@@ -56,5 +58,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+  .chart {
+    width: 80%;
+    height: 700px;
+  }
 </style>

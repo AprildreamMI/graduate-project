@@ -1,12 +1,9 @@
 <template>
   <right-content>
     <content-main>
-<!--       <div class="title text-24-R">
-        数据统计
-      </div> -->
       <el-row class="row" type="flex" justify="space-between">
         <el-col :span = 6 class="col">
-          <router-link to="user" tag="div" class="col-content">
+          <div class="col-content">
             <div class="col-content-left">
               <h1>{{ userCount }}</h1>
               <h3>用户总数量</h3>
@@ -14,7 +11,7 @@
             <div class="col-content-right">
               <i class="iconfont icon-icon-"></i>
             </div>
-          </router-link>
+          </div>
         </el-col>
         <el-col :span = 6 class="col">
           <router-link to="typeBook" tag="div" class="col-content">
@@ -28,7 +25,7 @@
           </router-link>
         </el-col>
         <el-col :span= 6 class="col">
-          <router-link to="order" tag="div" class="col-content">
+          <div class="col-content">
             <div class="col-content-left">
               <h1>{{ orderCount }}</h1>
               <h3>订单总数量</h3>
@@ -36,7 +33,7 @@
             <div class="col-content-right">
               <i class="iconfont icon-zhuzhuangtu"></i>
             </div>
-          </router-link>
+          </div>
         </el-col>
       </el-row>
       <div class="charts-box">
@@ -47,19 +44,6 @@
 </template>
 <script>
 import * as api from '../../../api'
-/* import vEcharts from 'vue-echarts-v3/src/lite.js'
-// 引入标题组件
-import 'echarts/lib/component/title'
-// 引入图例组件
-import 'echarts/lib/component/legend'
-// 引入提示框组件
-import 'echarts/lib/component/tooltip'
-// 引入工具箱组件
-import 'echarts/lib/component/toolbox'
-// 引入饼图
-import 'echarts/lib/chart/pie'
-
-import option from './option.js' */
 
 export default {
   data () {
@@ -184,8 +168,8 @@ export default {
     width: 100%;
     height: 780px;
     display: flex;
-    // justify-content: center;
-    // align-items: center;
+    justify-content: center;
+    align-items: center;
     background-color: white;
     box-shadow:0px 1px 7px 2px rgba(40,51,73,0.2);
   }

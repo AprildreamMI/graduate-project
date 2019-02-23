@@ -27,6 +27,7 @@ module.exports = {
    * @param {*} res 
    */
   isBooksAdmin (req, res) {
+    console.log('书籍书籍')
     if (!req.cookies.admin_me) {
       res.writeHead(200, {'Content-Type': 'text/html'});
       res.write('<head><meta charset="utf-8"/></head>');
@@ -34,6 +35,7 @@ module.exports = {
       return res.send()
     }
     let admin_me = JSON.parse(req.cookies.admin_me)
+    console.log(admin_me)
   
     if (Number(admin_me.AdminFlag) < 2) {
       res.writeHead(200, {'Content-Type': 'text/html'});

@@ -207,6 +207,51 @@ module.exports = {
     })
   },
 
+  // 修改用户的密码
+  shopUpdateUserPwd (req, res, next) {
+    // 判断用户是否登陆
+    userUtils.isUserLogin(req, res)
+    // 当前us噢登录用户的id
+    let userId = JSON.parse(req.cookies.user_me).CustomerId
+    async.series([
+      callback => {
+        let sql = `SELECT * FROM tb_customerinfo WHERE CustomerId = ${userId} AND CustomerPwd = '${req.body.oldPwd}'`
+        db.query(sql, (err, result) => {
+          if (result[0]) {
+            callback(err)
+          } else {
+            callback(new Error('旧密码不对'))
+          }
+        })
+      },
+      callback => {
+        let sql = `UPDATE tb_customerinfo SET CustomerPwd = '${req.body.confirmPwd}' WHERE CustomerId = ${userId}`
+        db.query(sql, (err, result) => {
+          // 更新成功
+          if (result.affectedRows === 1) {
+            callback(err); 
+          } else {
+            callback(new Error('修改密码失败'))
+          }
+        })
+      }
+    ], (err, result) => {
+      if (err) {
+        res.status(200).json({
+          data: err,
+          code: -1,
+          message: err.message
+        })
+      } else {
+        return res.status(200).json({
+          data:null,
+          code:0,
+          message: "修改密码成功"
+        })
+      }
+    })
+  },
+
   // 获取图书列表
   shopGetBookList (req, res, next) {
     async.waterfall([
@@ -886,7 +931,7 @@ module.exports = {
 
   // 更新当前账号信息
   adminUpdateAdminAccount (req, res, next) {
-    adminUtils.isRoot(req, res)
+    adminUtils.isAdmin(req, res)
     async.waterfall([
       callback => {
         let sql = `UPDATE tb_manager SET AdminName = '${req.body.AdminName}', AdminFlag = '${req.body.AdminFlag}', AdminAvatar = '${req.body.AdminAvatar}' WHERE AdminId = ${req.body.AdminId}`
@@ -931,6 +976,7 @@ module.exports = {
 
   // 更新当前账号密码
   adminUpdateAdminPwd (req, res, next) {
+    adminUtils.isAdmin(req, res)
     // 获取当前登陆的管理员id
     let adminId = adminUtils.getAdminId(req, res)
     async.series([
@@ -1115,7 +1161,7 @@ module.exports = {
 
   // 获取书籍列表 传入 搜索条件 书的类型 页码 每页的条目数
   adminGetBookList (req, res, next) {
-    adminUtils.isBooksAdmin(req, res)
+    adminUtils.isAdmin(req, res)
     async.waterfall([
       callback => {
         let sql = ''
@@ -1176,7 +1222,7 @@ module.exports = {
 
   // 添加书籍
   adminAddBookInfo (req, res, next) {
-    adminUtils.isBooksAdmin(req, res)
+    adminUtils.isAdmin(req, res)
     async.series([
       callback => {
         let query_isbn_sql = `SELECT * FROM tb_bookinfo WHERE Bookisbn = '${req.body.Bookisbn}'`
@@ -1258,7 +1304,7 @@ module.exports = {
 
   // 编辑书籍
   adminUpdateBookInfo (req, res, next) {
-    adminUtils.isBooksAdmin(req, res)
+    adminUtils.isAdmin(req, res)
     let sql = `UPDATE tb_bookinfo SET
                 BookTypeId = ${req.body.BookTypeId},
                 BookName = '${req.body.BookName}',
@@ -1303,7 +1349,7 @@ module.exports = {
 
   // 改变书籍状态 上架或者下架
   adminUpdateBookStatus (req, res, next) {
-    adminUtils.isBooksAdmin(req, res)
+    adminUtils.isAdmin(req, res)
     let sql = `UPDATE tb_bookinfo SET BookStatus = '${req.body.BookStatus}' WHERE BookId = ${req.body.BookId}`
     db.query(sql, (err, result) => {
       if (err) {
@@ -1329,7 +1375,7 @@ module.exports = {
     });
   },
 
-  // ==========书籍管理===========
+  // ==========订单管理需要第二等级===========
 
   // 管理员获取所有的订单
   adminGetrOrderList (req, res, next) {

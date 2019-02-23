@@ -230,7 +230,6 @@ export default {
         if (res.data.code === 0) {
           this.$message.success(res.data.message)
           loading.close()
-          console.log(res.data)
           this.adminAccountList = res.data.data.accountList
         } else {
           this.$message.error(res.data.message)
@@ -255,7 +254,6 @@ export default {
             if (res.data.code === 0) {
               this.$message.success(res.data.message)
               loading.close()
-              console.log(res.data)
 
               // 重置表单
               this.closeAddAdminAccountDialog(formName)
@@ -293,7 +291,6 @@ export default {
           if (res.data.code === 0) {
             this.$message.success(res.data.message)
             loading.close()
-            console.log(res.data)
 
             // 刷新列表
             this.getAllAcount()
@@ -323,7 +320,6 @@ export default {
         if (res.data.code === 0) {
           this.$message.success(res.data.message)
           loading.close()
-          console.log(res.data)
 
           // 刷新列表
           this.getAllAcount()
@@ -356,8 +352,7 @@ export default {
     },
     // 文件上传时
     uploadActive (file, fileList) {
-      console.log(file)
-      console.log(fileList)
+
     },
     // 上传之前
     beforeAvatarUpload (file) {
@@ -419,7 +414,6 @@ export default {
             if (res.data.code === 0) {
               this.$message.success(res.data.message)
               loading.close()
-              console.log(res.data)
 
               // 重置表单
               this.closeUpdateAdminAccountDialog(formName)

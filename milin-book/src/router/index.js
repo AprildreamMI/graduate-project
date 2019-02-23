@@ -14,7 +14,7 @@ const routes = [
   // 重定向登录页
   {
     path: '/',
-    component: () => import('../views/test/test-01.vue')
+    redirect: '/shop/home'
   },
   // 客户端 有登陆页 注册在登录时
   {
@@ -27,11 +27,17 @@ const routes = [
   },
   {
     path: '/shop/shopCar',
-    component: () => import('../views/shop/shopCar')
+    component: () => import('../views/shop/shopCar'),
+    meta: {
+      requireAuthUser: true
+    }
   },
   {
     path: '/shop/shopOrder',
-    component: () => import('../views/shop/order')
+    component: () => import('../views/shop/order'),
+    meta: {
+      requireAuthUser: true
+    }
   },
   // 后台管理登陆页面
   {
@@ -50,7 +56,7 @@ const routes = [
       {
         path: 'stats',
         component: () => import('../views/admin/stats'),
-        redirect: '/stats/typeBook',
+        redirect: '/admin/stats/typeBook',
         children: [
           {
             path: 'typeBook',
@@ -88,40 +94,6 @@ const routes = [
       }
     ]
   }
-  /* // 登录页
-  {
-    path: '/login',
-    component: () => import('../views/login')
-  },
-  // 方案管理系统
-  {
-    path: '/scheme',
-    // 重定向跳转到人员管理页面
-    redirect: '/scheme/home',
-    component: () => import('../views/scheme'),
-    children: [
-      {
-        // 没有选中某一个具体展示方案 列出的是全部的展示方案
-        path: 'home',
-        component: () => import('../views/scheme/home')
-      },
-      {
-        // 选中的某一个展示方案的展示看板
-        path: 'panelFolder/:id',
-        component: () => import('../views/scheme/panelFolder')
-      },
-      {
-        // 回收站
-        path: 'deleteFolder',
-        component: () => import('../views/scheme/deleteFolder')
-      }
-    ]
-  },
-  // 看板详情
-  {
-    path: '/panel/:id',
-    component: () => import('../views/panel')
-  } */
 ]
 
 const router = new Router({
@@ -140,7 +112,7 @@ router.beforeEach(async (to, from, next) => {
     if (cookie.get('user_me')) { // 判断是否已登陆
       next()
     } else {
-      next('/login')
+      next('/shop/login')
     }
     // 判断需要管理员账号登录
     // some()是对数组中每一项运行给定函数，如果该函数对任一项返回true，则返回true。

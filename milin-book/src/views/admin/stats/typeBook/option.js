@@ -13,7 +13,7 @@ let option = {
   },
   series: [
     {
-      name: '数据分类数量',
+      name: '各类书籍数量',
       type: 'pie',
       radius: '55%',
       center: ['50%', '50%'],
