@@ -12,6 +12,5 @@ export default {
 
 <style lang="scss">
 @import './style/index.scss';
-@import './style/iconfont/iconfont.css';
-// @import url('//at.alicdn.com/t/font_1041720_3di9jnr1peg.css');
+@import './style/iconfont.css';
 </style>

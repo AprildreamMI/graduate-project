@@ -11,7 +11,7 @@
  Target Server Version : 80014
  File Encoding         : 65001
 
- Date: 23/02/2019 18:44:26
+ Date: 06/03/2019 00:48:14
 */
 
 SET NAMES utf8mb4;
@@ -44,7 +44,7 @@ CREATE TABLE `tb_bookinfo`  (
   UNIQUE INDEX `BookISBN_F`(`Bookisbn`) USING BTREE COMMENT 'ISBN 书籍编号唯一',
   INDEX `BookTypeId_F`(`BookTypeId`) USING BTREE,
   CONSTRAINT `BookTypeId_F` FOREIGN KEY (`BookTypeId`) REFERENCES `tb_booktypeinfo` (`BookTypeId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 429 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 428 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_bookinfo
@@ -456,7 +456,7 @@ CREATE TABLE `tb_booktypeinfo`  (
   `BookTypeId` int(11) NOT NULL AUTO_INCREMENT COMMENT '图书类型编号 自增字段',
   `BookTypeName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '	\r\n类别名称',
   PRIMARY KEY (`BookTypeId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_booktypeinfo
@@ -490,24 +490,6 @@ INSERT INTO `tb_booktypeinfo` VALUES (28, '哲学/宗教');
 INSERT INTO `tb_booktypeinfo` VALUES (29, '经济');
 
 -- ----------------------------
--- Table structure for tb_comment
--- ----------------------------
-DROP TABLE IF EXISTS `tb_comment`;
-CREATE TABLE `tb_comment`  (
-  `CommentId` int(11) NOT NULL AUTO_INCREMENT COMMENT '图书评价编号',
-  `BookId` int(11) NOT NULL COMMENT '图书编号',
-  `CustomerId` int(11) NOT NULL COMMENT '评论客户编号',
-  `Commentdate` datetime(0) NOT NULL COMMENT '评论时间',
-  `Commentcontent` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '评论内容',
-  `Commentflag` enum('1','0','-1') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' COMMENT '审核标志\r\n1、过审\r\n0、待审\r\n-1、未通过审核',
-  PRIMARY KEY (`CommentId`) USING BTREE,
-  INDEX `BookId_C_F`(`BookId`) USING BTREE,
-  INDEX `CustomerId_C_F`(`CustomerId`) USING BTREE,
-  CONSTRAINT `BookId_C_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `CustomerId_C_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
 -- Table structure for tb_customerinfo
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_customerinfo`;
@@ -531,12 +513,12 @@ CREATE TABLE `tb_customerinfo`  (
   UNIQUE INDEX `customerinfoEmail_F`(`CustomerEmail`) USING BTREE COMMENT '邮件即为账号唯一性',
   UNIQUE INDEX `customerinfoTel_F`(`CustomerTel`) USING BTREE COMMENT '客户手机号码唯一性',
   INDEX `CustomerId`(`CustomerId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_customerinfo
 -- ----------------------------
-INSERT INTO `tb_customerinfo` VALUES (1, '死者的代言人', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278540', '1159902844@qq.com', '武汉', '2019-02-16 17:04:58', 12, '2019-02-23 17:17:47', NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
+INSERT INTO `tb_customerinfo` VALUES (1, '死者的代言人', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278540', '1159902844@qq.com', '武汉', '2019-02-16 17:04:58', 13, '2019-03-05 21:42:03', NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 INSERT INTO `tb_customerinfo` VALUES (2, '死者的代言人2', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '赵思', '1', '17371278541', '1159902544@qq.com', '武汉', '2019-02-16 17:06:27', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '0');
 INSERT INTO `tb_customerinfo` VALUES (3, '安德的游戏', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '安德', '1', '17566458892', 'andedeyouxi@qq.com', '虫巢', '2019-02-16 17:12:54', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
 INSERT INTO `tb_customerinfo` VALUES (4, '我不是许三观', 'de9e26d20f407a432167087ee00337a31efcfd2f5f870177858c95993ab5db0c', '许三观', '1', '17388902245', 'xusanguan@qq.com', '不详', '2019-02-16 17:14:20', 0, NULL, NULL, 'public/upload/img/userAvatar/default_user_avatar.jpg', '1');
@@ -564,7 +546,7 @@ CREATE TABLE `tb_manager`  (
   PRIMARY KEY (`AdminId`) USING BTREE,
   UNIQUE INDEX `UN_Name`(`AdminName`) USING BTREE COMMENT '姓名唯一',
   UNIQUE INDEX `UN_Account`(`AdminAccount`) USING BTREE COMMENT '账号唯一'
-) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_manager
@@ -626,25 +608,6 @@ INSERT INTO `tb_order` VALUES (17, '201902221732391', 1, 38, 1, '2019-02-22 17:3
 INSERT INTO `tb_order` VALUES (18, '201902231653144', 5, 426, 1, '2019-02-23 16:53:06', '0', '1', NULL, '', '天津市天津城区河东区', 24.00, '0', NULL, '0', NULL);
 
 -- ----------------------------
--- Table structure for tb_parameter
--- ----------------------------
-DROP TABLE IF EXISTS `tb_parameter`;
-CREATE TABLE `tb_parameter`  (
-  `webname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '密林的书店' COMMENT '网站名',
-  `regtiaoyue` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '注册条款',
-  `notice` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公告',
-  `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '武汉交通职业学院移动开发二班赵思' COMMENT '地址',
-  `postcode` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'magicwingzs@qq.com' COMMENT '邮编',
-  `tel` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '17371278540' COMMENT '电话号码',
-  `copyright` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '本网站版权归赵思所有' COMMENT '版权',
-  `weblogo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '网站Logo',
-  `website` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'localhost:8080' COMMENT '网站地址',
-  `worktime` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '6:00-12:00' COMMENT '工作时间',
-  `service` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '17371278540' COMMENT '售后服务',
-  PRIMARY KEY (`webname`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
 -- Table structure for tb_shopbook
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_shopbook`;
@@ -660,7 +623,7 @@ CREATE TABLE `tb_shopbook`  (
   INDEX `BookId_F`(`BookId`) USING BTREE,
   CONSTRAINT `BookId_F` FOREIGN KEY (`BookId`) REFERENCES `tb_bookinfo` (`BookId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `CustomerId_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_shopbook
@@ -668,35 +631,5 @@ CREATE TABLE `tb_shopbook`  (
 INSERT INTO `tb_shopbook` VALUES (10, 1, 332, 1, '1', '山西省长治市襄垣县');
 INSERT INTO `tb_shopbook` VALUES (11, 1, 337, 1, '1', '山西省长治市襄垣县');
 INSERT INTO `tb_shopbook` VALUES (13, 1, 334, 1, '1', '山西省长治市襄垣县');
-
--- ----------------------------
--- Table structure for tb_useraddress
--- ----------------------------
-DROP TABLE IF EXISTS `tb_useraddress`;
-CREATE TABLE `tb_useraddress`  (
-  `addressId` int(11) NOT NULL AUTO_INCREMENT,
-  `CustomerId` int(11) NOT NULL COMMENT '客户编号',
-  `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  PRIMARY KEY (`addressId`) USING BTREE,
-  INDEX `CustomerId_A_F`(`CustomerId`) USING BTREE,
-  CONSTRAINT `CustomerId_A_F` FOREIGN KEY (`CustomerId`) REFERENCES `tb_customerinfo` (`CustomerId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for test
--- ----------------------------
-DROP TABLE IF EXISTS `test`;
-CREATE TABLE `test`  (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of test
--- ----------------------------
-INSERT INTO `test` VALUES (1, 'zhaosi');
-INSERT INTO `test` VALUES (2, 'liupan');
-INSERT INTO `test` VALUES (3, 'liusheng');
 
 SET FOREIGN_KEY_CHECKS = 1;

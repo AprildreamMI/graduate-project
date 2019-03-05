@@ -139,7 +139,7 @@ export default {
     align-items: center;
     width: 100%;
     height: 100vh;
-    background-image: url('/static/img/admin/login/登录-背景.png');
+    background-image: url('/static/img/admin/login/login-bg.png');
     overflow: hidden;
     .w {
       width: 1200px;
@@ -149,7 +149,7 @@ export default {
         width: 100%;
         height: 650px;
         border-radius: 6px;
-        background-image: url('/static/img/admin/login/登录-表单背景.png');
+        background-image: url('/static/img/admin/login/login-from-bg.png');
         .right-from {
           display: flex;
           align-items: center;
@@ -198,7 +198,7 @@ export default {
           width: 107px;
           height: 100px;
           right: 45px;
-          background-image: url(/static/img/admin/login/登录-表单人物.png);
+          background-image: url(/static/img/admin/login/login-from-person.png);
           bottom: 54px;
         }
       }
