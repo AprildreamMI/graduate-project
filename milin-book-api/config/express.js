@@ -40,6 +40,7 @@ module.exports  = function(){
   app.use('/public', express.static('public'));
   app.use('/node_modules', express.static('node_modules'));
 
+  // 配置router 文件
   require('../app/routes/milinbook.server.routes')(app);
 
   // 处理所有未知的请求
