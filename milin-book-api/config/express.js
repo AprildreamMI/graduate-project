@@ -37,6 +37,7 @@ module.exports  = function(){
   });
 
   // 开放资源 目录
+  // -- 前面 的 是指定在浏览器访问的目录名字 后面的是实际目录
   app.use('/public', express.static('public'));
   app.use('/node_modules', express.static('node_modules'));
 
